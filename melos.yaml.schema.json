@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "melos.yaml",
+  "description": "The workspace configuration file for Melos",
+  "type": "object",
+  "required": ["name", "packages"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the Melos workspace – used by IDE documentation."
+    },
+    "repository": {
+      "type": "string",
+      "description": "The hosted git repository which contains the workspace."
+    },
+    "packages": {
+      "type": "array",
+      "description": "Patterns for packages that are included in the melos workspace.",
+      "items": { "type": "string" }
+    },
+    "ignore": {
+      "type": "array",
+      "description": "Patterns for packages to exclude from the melos workspace.",
+      "items": { "type": "string" }
+    },
+    "scripts": {
+      "type": "object",
+      "description": "A list of scripts that can be executed with `melos run` or will be executed before/after some specific melos commands.",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string", "description": "The command to execute." },
+          {
+            "type": "object",
+            "required": ["run"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "A unique identifier for the script."
+              },
+              "description": {
+                "type": "string",
+                "description": "A short description, shown when using `melos run` with no argument."
+              },
+              "run": {
+                "type": "string",
+                "description": "The command to execute."
+              },
+              "env": {
+                "type": "object",
+                "description": "Environment variables that will be passed to the command to execute.",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "The value of the environment variable."
+                }
+              },
+              "select-package": {
+                "type": "object",
+                "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
+                "properties": {
+                  "scope": {
+                    "description": "Patterns for including packages by name.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "ignore": {
+                    "description": "Patterns for excluding packages by name.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "dir-exists": {
+                    "description": "Include a package only if a given directory exists.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "file-exists": {
+                    "description": "Include a package only if a given file exists.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "depends-on": {
+                    "description": "Include only packages that depend on a specific package.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "no-depends-on": {
+                    "description": "Include only packages that do not depend on a specific package.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    ]
+                  },
+                  "since": {
+                    "type": "string",
+                    "description": "Filter package based on whether they received changed since a specific git commit/tag ID."
+                  },
+                  "private": {
+                    "type": "boolean",
+                    "description": "Include packages with `publish_to: none`."
+                  },
+                  "no-private": {
+                    "type": "boolean",
+                    "description": "Exclude packages with `publish_to: none`."
+                  },
+                  "published": {
+                    "type": "boolean",
+                    "description": "Include/Exclude packages that are up-to-date on pub.dev."
+                  },
+                  "null-safety": {
+                    "type": "boolean",
+                    "description": "Include/Exclude packages that are null-safe."
+                  },
+                  "flutter": {
+                    "type": "boolean",
+                    "description": "Include/Exclude packages that are Flutter packages."
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "ide": {
+      "type": "object",
+      "description": "IDE-specific configurations.\n\nThis allows connecting the different scripts to the IDE or tells melos to generate the necessary files for mono-repositories to work in the IDE.",
+      "properties": {
+        "intellij": {
+          "type": "object",
+          "description": "The IntelliJ configuration for the workspace.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether IntelliJ support is enabled."
+            }
+          }
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "description": "Command-specific configurations.\n\nThis allows customizing the default behavior of melos commands.",
+      "properties": {
+        "version": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "A custom header for the generated CHANGELOG.md."
+            },
+            "linkToCommits": {
+              "type": "boolean",
+              "description": "Whether to add links to commits in the generated CHANGELOG.md.\n\nDisabled by default."
+            },
+            "branch": {
+              "type": "string",
+              "description": "If specified, prevents `melos version` from being used inside branches other than the one specified."
+            }
+          }
+        }
+      }
+    }
+  }
+}

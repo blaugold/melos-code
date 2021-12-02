@@ -1,0 +1,93 @@
+{
+  "name": "melos-code",
+  "publisher": "blaugold",
+  "displayName": "Melos",
+  "description": "Melos support for Visual Studio Code",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "melos",
+    "dart",
+    "flutter",
+    "monorepo"
+  ],
+  "icon": "docs/images/melos-logo.png",
+  "galleryBanner": {
+    "color": "#FFFFFF",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blaugold/melos-code"
+  },
+  "homepage": "https://github.com/blaugold/melos-code",
+  "bugs": {
+    "url": "https://github.com/blaugold/melos-code/issues"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "preview": true,
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.62.0"
+  },
+  "activationEvents": [
+    "workspaceContains:melos.yaml"
+  ],
+  "contributes": {
+    "yamlValidation": [
+      {
+        "fileMatch": "melos.yaml",
+        "url": "./melos.yaml.schema.json"
+      }
+    ],
+    "taskDefinitions": [
+      {
+        "type": "melos",
+        "required": [
+          "script"
+        ],
+        "properties": {
+          "script": {
+            "type": "string",
+            "description": "The name of the script to run."
+          }
+        },
+        "when": "shellExecutionSupported"
+      }
+    ]
+  },
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.62.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "@vscode/test-electron": "^1.6.2",
+    "esbuild": "^0.14.1",
+    "eslint": "^8.1.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.3",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "ajv": "^8.8.2",
+    "yaml": "^1.10.2"
+  }
+}

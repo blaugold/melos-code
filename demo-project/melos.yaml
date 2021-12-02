@@ -1,0 +1,6 @@
+name: test-project
+packages:
+  - packages/**
+
+scripts:
+  hello: echo 'Hello World'

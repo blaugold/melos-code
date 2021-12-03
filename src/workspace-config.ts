@@ -30,6 +30,11 @@ export interface MelosScriptConfig {
    * The name of the script.
    */
   name: MelosScriptName
+
+  /**
+   * The command to run for the script.
+   */
+  run?: MelosScriptCommand
 }
 
 /**
@@ -38,6 +43,20 @@ export interface MelosScriptConfig {
 export interface MelosScriptName {
   /**
    * The name of the script.
+   */
+  value: string
+  /**
+   * The YAML node that contains the name.
+   */
+  yamlNode: Node
+}
+
+/**
+ * A command to run for a Melos script.
+ */
+export interface MelosScriptCommand {
+  /**
+   * The command to run.
    */
   value: string
   /**
@@ -127,13 +146,41 @@ function melosScriptsConfigsFromYaml(value: any): MelosScriptConfig[] {
     .map((entry) => {
       const name = entry.key as Scalar
 
-      return {
-        name: {
-          value: name.value,
-          yamlNode: name,
-        },
+      const scriptName = {
+        value: name.value,
+        yamlNode: name,
       }
+
+      const definition = entry.value
+      if (definition instanceof Scalar) {
+        return {
+          name: scriptName,
+          run: melosScriptCommandFromYaml(definition),
+        }
+      }
+
+      if (definition instanceof YAMLMap) {
+        return {
+          name: scriptName,
+          run: melosScriptCommandFromYaml(definition.get('run', true)),
+        }
+      }
+
+      return { name: scriptName }
     })
+}
+
+function melosScriptCommandFromYaml(
+  value: any
+): MelosScriptCommand | undefined {
+  if (value instanceof Scalar && typeof value.value === 'string') {
+    return {
+      value: value.value,
+      yamlNode: value,
+    }
+  }
+
+  return undefined
 }
 
 // === melos.yaml schema ======================================================

@@ -56,15 +56,19 @@ class MelosScriptTaskProvider implements vscode.TaskProvider {
       return []
     }
 
-    return melosConfig.scripts.map((script) =>
-      buildMelosScriptTask(
+    return melosConfig.scripts.map((script) => {
+      const task = buildMelosScriptTask(
         {
           type: 'melos',
           script: script.name.value,
         },
         folder
       )
-    )
+
+      task.detail = script.run?.value
+
+      return task
+    })
   }
 
   public resolveTask(_task: vscode.Task): vscode.Task | undefined {

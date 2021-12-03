@@ -2,7 +2,7 @@ import Ajv, { Schema, ValidateFunction } from 'ajv'
 import * as vscode from 'vscode'
 import { Document, parseDocument } from 'yaml'
 import { Node, Scalar, YAMLMap } from 'yaml/types'
-import { readOptionalFile } from './fs-utils'
+import { readOptionalFile } from './utils/fs-utils'
 
 const melosYamlFile = 'melos.yaml'
 

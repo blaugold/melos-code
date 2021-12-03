@@ -1,9 +1,11 @@
 import * as vscode from 'vscode'
 import { MelosRunScriptCommandArgs } from './commands'
+import { vscodeRangeFromNode } from './utils/yaml-utils'
 import { parseMelosWorkspaceConfig } from './workspace-config'
-import { vscodeRangeFromNode } from './yaml-utils'
 
-export function registerMelosYamlCodeLenseProvider(context: vscode.ExtensionContext) {
+export function registerMelosYamlCodeLenseProvider(
+  context: vscode.ExtensionContext
+) {
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider(
       { language: 'yaml', pattern: '**/melos.yaml' },

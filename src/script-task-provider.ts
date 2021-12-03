@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { isWorkspaceFolder } from './vscode-utils'
+import { isWorkspaceFolder } from './utils/vscode-utils'
 import { loadMelosWorkspaceConfig } from './workspace-config'
 
 export function registerMelosScriptTaskProvider(

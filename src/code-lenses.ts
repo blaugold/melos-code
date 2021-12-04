@@ -1,7 +1,10 @@
 import * as vscode from 'vscode'
 import { MelosRunScriptCommandArgs } from './commands'
 import { vscodeRangeFromNode } from './utils/yaml-utils'
-import { parseMelosWorkspaceConfig } from './workspace-config'
+import {
+  MelosWorkspaceConfig,
+  parseMelosWorkspaceConfig,
+} from './workspace-config'
 
 export function registerMelosYamlCodeLenseProvider(
   context: vscode.ExtensionContext
@@ -17,11 +20,26 @@ export function registerMelosYamlCodeLenseProvider(
 class MelosYamlCodeLenseProvider implements vscode.CodeLensProvider {
   async provideCodeLenses(document: vscode.TextDocument) {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri)
+    const workspaceConfig = parseMelosWorkspaceConfig(document.getText())
+
+    return [
+      ...this.buildRunScriptCodeLenses(
+        workspaceConfig,
+        workspaceFolder,
+        document
+      ),
+    ]
+  }
+
+  private buildRunScriptCodeLenses(
+    workspaceConfig: MelosWorkspaceConfig,
+    workspaceFolder: vscode.WorkspaceFolder | undefined,
+    document: vscode.TextDocument
+  ) {
     if (!workspaceFolder) {
+      // We need a workspace folder to run scripts.
       return []
     }
-
-    const workspaceConfig = parseMelosWorkspaceConfig(document.getText())
 
     return workspaceConfig.scripts.map((script) => {
       const name = script.name
@@ -32,7 +50,7 @@ class MelosYamlCodeLenseProvider implements vscode.CodeLensProvider {
       }
 
       return new vscode.CodeLens(vscodeRangeFromNode(document, name.yamlNode), {
-        title: `Run ${name.value}`,
+        title: `Run script`,
         command: 'melos.runScript',
         arguments: [runScriptCommandArgs],
       })

@@ -11,8 +11,14 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, './suite/index')
 
+    const workspaceDir = path.resolve(__dirname, '../../melos-workspaces/test')
+
     // Download VS Code, unzip it and run the integration test
-    await runTests({ extensionDevelopmentPath, extensionTestsPath })
+    await runTests({
+      extensionDevelopmentPath,
+      extensionTestsPath,
+      launchArgs: [workspaceDir],
+    })
   } catch (err) {
     console.error('Failed to run tests')
     process.exit(1)

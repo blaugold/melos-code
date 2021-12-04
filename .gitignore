@@ -1,5 +1,6 @@
-out
-dist
-node_modules
 .vscode-test/
+melos-workspaces/test/**
+!melos-workspaces/test/.gitkeep
+node_modules
+out
 *.vsix

@@ -20,8 +20,12 @@
       "type": "npm",
       "script": "lint",
       "problemMatcher": ["$eslint-stylish"],
-      "label": "npm: lint",
-      "detail": "eslint src --ext ts"
+      "label": "npm: lint"
+    },
+    {
+      "type": "npm",
+      "script": "pretest",
+      "label": "npm: pretest"
     }
   ]
 }

@@ -29,10 +29,11 @@ export async function openMelosYamlInEditor(): Promise<vscode.TextEditor> {
   return await vscode.window.showTextDocument(doc)
 }
 
-export async function resolveMelosYamlCodeLenses(): Promise<vscode.CodeLens[]> {
-  const codeLenses = await vscode.commands.executeCommand<vscode.CodeLens[]>(
+export async function resolveMelosYamlCodeLenses(): Promise<
+  vscode.CodeLens[] | undefined
+> {
+  return await vscode.commands.executeCommand<vscode.CodeLens[]>(
     'vscode.executeCodeLensProvider',
     melosYamlUri()
   )
-  return codeLenses!
 }

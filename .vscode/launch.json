@@ -26,7 +26,7 @@
         "${workspaceFolder}/melos-workspaces/test"
       ],
       "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
-      "preLaunchTask": "${defaultBuildTask}"
+      "preLaunchTask": "npm: pretest"
     }
   ]
 }

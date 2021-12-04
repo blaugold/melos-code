@@ -4,6 +4,7 @@
   "description": "The workspace configuration file for Melos",
   "type": "object",
   "required": ["name", "packages"],
+  "additionalProperties": false,
   "properties": {
     "name": {
       "type": "string",
@@ -23,6 +24,51 @@
       "description": "Patterns for packages to exclude from the melos workspace.",
       "items": { "type": "string" }
     },
+
+    "ide": {
+      "type": "object",
+      "description": "IDE-specific configurations.\n\nThis allows connecting the different scripts to the IDE or tells melos to generate the necessary files for mono-repositories to work in the IDE.",
+      "additionalProperties": false,
+      "properties": {
+        "intellij": {
+          "type": "object",
+          "description": "The IntelliJ configuration for the workspace.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether IntelliJ support is enabled."
+            }
+          }
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "description": "Command-specific configurations.\n\nThis allows customizing the default behavior of melos commands.",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "object",
+          "description": "The version command configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "A custom header for the generated CHANGELOG.md."
+            },
+            "linkToCommits": {
+              "type": "boolean",
+              "description": "Whether to add links to commits in the generated CHANGELOG.md.\n\nDisabled by default."
+            },
+            "branch": {
+              "type": "string",
+              "description": "If specified, prevents `melos version` from being used inside branches other than the one specified."
+            }
+          }
+        }
+      }
+    },
     "scripts": {
       "type": "object",
       "description": "A list of scripts that can be executed with `melos run` or will be executed before/after some specific melos commands.",
@@ -31,6 +77,8 @@
           { "type": "string", "description": "The command to execute." },
           {
             "type": "object",
+            "description": "The script definition.",
+            "additionalProperties": false,
             "required": ["run"],
             "properties": {
               "name": {
@@ -56,6 +104,7 @@
               "select-package": {
                 "type": "object",
                 "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
+                "additionalProperties": false,
                 "properties": {
                   "scope": {
                     "description": "Patterns for including packages by name.",
@@ -158,45 +207,6 @@
             }
           }
         ]
-      }
-    },
-    "ide": {
-      "type": "object",
-      "description": "IDE-specific configurations.\n\nThis allows connecting the different scripts to the IDE or tells melos to generate the necessary files for mono-repositories to work in the IDE.",
-      "properties": {
-        "intellij": {
-          "type": "object",
-          "description": "The IntelliJ configuration for the workspace.",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "Whether IntelliJ support is enabled."
-            }
-          }
-        }
-      }
-    },
-    "commands": {
-      "type": "object",
-      "description": "Command-specific configurations.\n\nThis allows customizing the default behavior of melos commands.",
-      "properties": {
-        "version": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "A custom header for the generated CHANGELOG.md."
-            },
-            "linkToCommits": {
-              "type": "boolean",
-              "description": "Whether to add links to commits in the generated CHANGELOG.md.\n\nDisabled by default."
-            },
-            "branch": {
-              "type": "string",
-              "description": "If specified, prevents `melos version` from being used inside branches other than the one specified."
-            }
-          }
-        }
       }
     }
   }

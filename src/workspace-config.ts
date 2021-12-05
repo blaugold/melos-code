@@ -4,7 +4,7 @@ import { Document, parseDocument } from 'yaml'
 import { Node, Scalar, YAMLMap } from 'yaml/types'
 import { readOptionalFile } from './utils/fs-utils'
 
-const melosYamlFile = 'melos.yaml'
+export const melosYamlFile = 'melos.yaml'
 
 /**
  * A Melos workspace configuration.

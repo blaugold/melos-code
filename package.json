@@ -76,7 +76,8 @@
     "pretest": "npm run compile && npm run clean:test-workspace",
     "test": "node ./out/test/runTest.js",
     "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write ."
+    "prettier:write": "prettier --write .",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",
@@ -87,6 +88,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "@vscode/test-electron": "^1.6.2",
+    "conventional-changelog-cli": "^2.1.1",
     "esbuild": "^0.14.1",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",

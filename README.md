@@ -5,11 +5,6 @@ This extension adds support for using [Melos] with Visual Studio Code.
 - Validation and autocompletion of `melos.yaml`
 - Run scripts in `melos.yaml` through CodeLenses
 - Provide scripts in `melos.yaml` as tasks
-
-## Release Notes
-
-### 0.1.0
-
-Initial release
+- Apply defaults for Dart VS Code extension settings
 
 [melos]: https://pub.dev/packages/melos

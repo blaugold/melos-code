@@ -53,8 +53,7 @@ name: a
 packages:
   - a
 ide:
-  intellij:
-      enabled: true
+  intellij: true
 `)
   })
 
@@ -71,26 +70,12 @@ ide:
     )
   })
 
-  test('reject additional props in intellij ide config', () => {
-    assertInvalidMelosYaml(
-      `
-name: a
-packages:
-    - a
-ide:
-    intellij:
-        a: a
-`,
-      { instancePath: '/ide/intellij', keyword: 'additionalProperties' }
-    )
-  })
-
   test('accept version command config', () => {
     assertValidMelosYaml(`
 name: a
 packages:
   - a
-commands:
+command:
   version:
       message: a
       linkToCommits: true
@@ -98,16 +83,16 @@ commands:
 `)
   })
 
-  test('reject additional props in commands config', () => {
+  test('reject additional props in command config', () => {
     assertInvalidMelosYaml(
       `
 name: a
 packages:
     - a
-commands:
+command:
     a: a
 `,
-      { instancePath: '/commands', keyword: 'additionalProperties' }
+      { instancePath: '/command', keyword: 'additionalProperties' }
     )
   })
 
@@ -117,11 +102,11 @@ commands:
 name: a
 packages:
     - a
-commands:
+command:
     version:
         a: a
 `,
-      { instancePath: '/commands/version', keyword: 'additionalProperties' }
+      { instancePath: '/command/version', keyword: 'additionalProperties' }
     )
   })
 

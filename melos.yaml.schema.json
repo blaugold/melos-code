@@ -31,19 +31,12 @@
       "additionalProperties": false,
       "properties": {
         "intellij": {
-          "type": "object",
-          "description": "The IntelliJ configuration for the workspace.",
-          "additionalProperties": false,
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "description": "Whether IntelliJ support is enabled."
-            }
-          }
+          "type": "boolean",
+          "description": "Whether IntelliJ support is enabled."
         }
       }
     },
-    "commands": {
+    "command": {
       "type": "object",
       "description": "Command-specific configurations.\n\nThis allows customizing the default behavior of melos commands.",
       "additionalProperties": false,

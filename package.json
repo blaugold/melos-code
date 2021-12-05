@@ -59,7 +59,8 @@
     ]
   },
   "extensionDependencies": [
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "dart-code.dart-code"
   ],
   "main": "./out/extension.js",
   "scripts": {
@@ -69,8 +70,9 @@
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "lint": "eslint src --ext ts",
+    "clean:dev-workspace": "git clean -xdf melos-workspaces/dev",
     "clean:test-workspace": "git clean -xdf melos-workspaces/test",
+    "lint": "eslint src --ext ts",
     "pretest": "npm run compile && npm run clean:test-workspace",
     "test": "node ./out/test/runTest.js",
     "prettier:check": "prettier --check .",

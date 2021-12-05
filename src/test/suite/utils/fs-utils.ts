@@ -21,6 +21,7 @@ export async function clearDirectory(
     }
 
     await vscode.workspace.fs.delete(fileUri, {
+      recursive: true,
       useTrash: false,
     })
   }

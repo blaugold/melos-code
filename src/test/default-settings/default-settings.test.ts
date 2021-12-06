@@ -1,12 +1,17 @@
 import * as vscode from 'vscode'
-import { createMelosYaml } from './utils/melos-yaml-utils'
-import { retryUntilResult } from './utils/misc-utils'
-import { resetWorkspace, workspaceFolder } from './utils/vscode-workspace-utils'
+import {
+  createMelosYaml,
+  openMelosYamlInEditor,
+} from '../utils/melos-yaml-utils'
+import { retryUntilResult } from '../utils/misc-utils'
+import { workspaceFolder } from '../utils/vscode-workspace-utils'
 
-suite('Settings', () => {
+suite('Default settings', () => {
   test('should apply defaults', async () => {
-    await resetWorkspace()
     await createMelosYaml()
+    // We need to open the melos.yaml file to activate the extension.
+    // Just creating the file does not activate the extension.
+    await openMelosYamlInEditor()
 
     const melosWorkspaceDefaultSettings = {
       'dart.runPubGetOnPubspecChanges': false,

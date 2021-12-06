@@ -67,7 +67,11 @@ export async function initMelosWorkspaces(context: vscode.ExtensionContext) {
 
       const folder = vscode.workspace.getWorkspaceFolder(uri)
       if (folder) {
-        addMelosWorkspace(folder)
+        // Only add workspace folder if melos.yml is at the root of it.
+        const melosYamlAtRoot = vscode.Uri.joinPath(folder.uri, melosYamlFile)
+        if (uri.toString() === melosYamlAtRoot.toString()) {
+          addMelosWorkspace(folder)
+        }
       }
     })
   )

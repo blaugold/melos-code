@@ -11,19 +11,34 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "${workspaceFolder}/melos-workspaces/dev"
+        "${workspaceFolder}/src/test/workspaces/dev"
       ],
       "outFiles": ["${workspaceFolder}/out/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}"
     },
     {
-      "name": "Extension Tests",
+      "name": "Extension Tests (suite)",
       "type": "extensionHost",
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
-        "${workspaceFolder}/melos-workspaces/test"
+        "--extensionTestsPath=${workspaceFolder}/out/test/suite",
+        "${workspaceFolder}/src/test/workspaces/suite"
+      ],
+      "env": {
+        "MELOS_CODE_CONSOLE_LOG_LEVEL": "debug"
+      },
+      "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
+      "preLaunchTask": "npm: pretest"
+    },
+    {
+      "name": "Extension Tests (default-settings)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/out/test/default-settings",
+        "${workspaceFolder}/src/test/workspaces/default-settings"
       ],
       "env": {
         "MELOS_CODE_CONSOLE_LOG_LEVEL": "debug"

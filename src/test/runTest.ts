@@ -1,44 +1,24 @@
-import {
-  downloadAndUnzipVSCode,
-  resolveCliPathFromVSCodeExecutablePath,
-  runTests,
-} from '@vscode/test-electron'
+import * as vscode from '@vscode/test-electron'
 import * as cp from 'child_process'
 import * as path from 'path'
 
-function getExtensionDependencies(): string[] {
-  const packageJson = require('../../package.json')
-  return packageJson.extensionDependencies
-}
+let exitCode = 0
 
-async function main() {
+const vscodeVersion = process.env.VSCODE_VERSION ?? 'stable'
+const extensionDevelopmentPath = path.resolve(__dirname, '../../')
+const extensionDependencies: string[] =
+  require('../../package.json').extensionDependencies
+
+async function runTests(suiteName: string) {
   try {
-    const vscodeVersion = process.env.VSCODE_VERSION ?? 'stable'
-    const vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion)
-    const cliPath = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath)
+    const extensionTestsPath = path.resolve(__dirname, suiteName)
+    const workspaceDir = path.resolve(
+      __dirname,
+      '../../src/test/workspaces',
+      suiteName
+    )
 
-    // Ensure that the redhat.vscode-yaml extension is installed.
-    // This is a dependency of this extension and provides the language
-    // definition for yaml, which is needed to activate this extension.
-    const extensionDependencies = getExtensionDependencies()
-    for (const extension of extensionDependencies) {
-      cp.execSync(`"${cliPath}" --force --install-extension=${extension}`, {
-        stdio: 'inherit',
-      })
-    }
-
-    // The folder containing the Extension Manifest package.json
-    // Passed to `--extensionDevelopmentPath`
-    const extensionDevelopmentPath = path.resolve(__dirname, '../../')
-
-    // The path to test runner
-    // Passed to --extensionTestsPath
-    const extensionTestsPath = path.resolve(__dirname, './suite/index')
-
-    const workspaceDir = path.resolve(__dirname, '../../melos-workspaces/test')
-
-    // Download VS Code, unzip it and run the integration test
-    await runTests({
+    const res = await vscode.runTests({
       version: vscodeVersion,
       extensionDevelopmentPath,
       extensionTestsPath,
@@ -49,10 +29,36 @@ async function main() {
         ...process.env,
       },
     })
+    exitCode = exitCode || res
   } catch (err) {
-    console.error('Failed to run tests')
-    process.exit(1)
+    console.error(err)
+    exitCode = exitCode || 999
   }
 }
 
-main()
+async function main() {
+  const vscodeExecutablePath = await vscode.downloadAndUnzipVSCode(
+    vscodeVersion
+  )
+  const cliPath =
+    vscode.resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath)
+
+  // Ensure that the redhat.vscode-yaml extension is installed.
+  // This is a dependency of this extension and provides the language
+  // definition for yaml, which is needed to activate this extension.
+  for (const extension of extensionDependencies) {
+    cp.execSync(`"${cliPath}" --force --install-extension=${extension}`, {
+      stdio: 'inherit',
+    })
+  }
+
+  try {
+    await runTests('suite')
+    await runTests('default-settings')
+  } catch (err) {
+    console.error(err)
+    exitCode = 1
+  }
+}
+
+main().then(() => process.exit(exitCode))

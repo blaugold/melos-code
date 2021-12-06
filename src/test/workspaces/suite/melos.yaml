@@ -1,0 +1,5 @@
+name: melos
+packages:
+  - packages/**
+scripts:
+  a: b

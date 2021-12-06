@@ -1,18 +1,11 @@
 import * as assert from 'assert'
 import * as vscode from 'vscode'
-import { createMelosYaml } from './utils/melos-yaml-utils'
-import { retryUntilResult } from './utils/misc-utils'
-import { resetWorkspace, workspaceFolder } from './utils/vscode-workspace-utils'
+import { createMelosYaml } from '../utils/melos-yaml-utils'
+import { retryUntilResult } from '../utils/misc-utils'
+import { workspaceFolder } from '../utils/vscode-workspace-utils'
 
 suite('Melos script task provider', () => {
   test('should provide tasks for scripts in melos.yaml', async () => {
-    await resetWorkspace()
-    await createMelosYaml({
-      scripts: {
-        a: 'b',
-      },
-    })
-
     const tasks = await retryUntilResult(async () => {
       const tasks = await vscode.tasks.fetchTasks({ type: 'melos' })
       return tasks.length === 0 ? undefined : tasks

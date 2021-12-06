@@ -13,7 +13,7 @@ function getExtensionDependencies(): string[] {
 
 async function main() {
   try {
-    const vscodeVersion = 'stable'
+    const vscodeVersion = process.env.VSCODE_VERSION ?? 'stable'
     const vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion)
     const cliPath = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath)
 
@@ -43,6 +43,11 @@ async function main() {
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: [workspaceDir],
+      extensionTestsEnv: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        MELOS_CODE_CONSOLE_LOG_LEVEL: 'debug',
+        ...process.env,
+      },
     })
   } catch (err) {
     console.error('Failed to run tests')

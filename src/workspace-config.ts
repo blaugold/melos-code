@@ -2,6 +2,7 @@ import Ajv, { Schema, ValidateFunction } from 'ajv'
 import * as vscode from 'vscode'
 import { Document, parseDocument } from 'yaml'
 import { Node, Scalar, YAMLMap } from 'yaml/types'
+import { info, warn } from './logging'
 import { readOptionalFile } from './utils/fs-utils'
 
 export const melosYamlFile = 'melos.yaml'
@@ -113,7 +114,10 @@ export async function loadMelosWorkspaceConfig(
 
   const config = parseMelosWorkspaceConfig(configFile.toString())
 
-  if (!(await isMelosWorkspaceConfigValid(context, config))) {
+  if (await isMelosWorkspaceConfigValid(context, config)) {
+    info(`Loaded valid ${melosYamlFile} from '${folder.name}' folder`)
+  } else {
+    warn(`Loaded invalid ${melosYamlFile} from '${folder.name}' folder`)
     showInvalidMelosYamlMessage(folder)
   }
 

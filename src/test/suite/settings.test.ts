@@ -24,7 +24,7 @@ suite('Settings', () => {
       for (const [key, value] of Object.entries(
         melosWorkspaceDefaultSettings
       )) {
-        if (!settings.get(key) !== value) {
+        if (settings.get(key) !== value) {
           return
         }
       }

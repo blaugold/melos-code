@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { info } from './logging'
 import { isWorkspaceFolder } from './utils/vscode-utils'
 import { loadMelosWorkspaceConfig } from './workspace-config'
 
@@ -55,6 +56,11 @@ class MelosScriptTaskProvider implements vscode.TaskProvider {
     if (!melosConfig || !melosConfig.scripts) {
       return []
     }
+
+    info(
+      `Loaded scripts for tasks in '${folder.name}' folder`,
+      melosConfig.scripts.map((script) => script.name.value)
+    )
 
     return melosConfig.scripts.map((script) => {
       const task = buildMelosScriptTask(

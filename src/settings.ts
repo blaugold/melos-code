@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { error, info } from './logging'
 import { melosWorkspaces } from './melos-workspace'
 
 /**
@@ -13,7 +14,16 @@ export async function registerDefaultMelosWorkspaceSettings(
 
   context.subscriptions.push(
     melosWorkspaces.onDidChangeWorkspaceFolders(async (event) => {
-      return Promise.all(event.added.map(applyDefaultMelosWorkspaceSettings))
+      for (const folder of event.added) {
+        try {
+          await applyDefaultMelosWorkspaceSettings(folder)
+        } catch (e) {
+          error(
+            `Failed to apply default Melos workspace settings in '${folder.name}' folder`,
+            e
+          )
+        }
+      }
     })
   )
 }
@@ -33,10 +43,15 @@ async function applyDefaultMelosWorkspaceSettings(
   for (const [key, value] of Object.entries(melosWorkspaceDefaultSettings)) {
     const { workspaceFolderValue } = settings.inspect(key)!
 
-    if (workspaceFolderValue) {
+    if (workspaceFolderValue !== undefined) {
       // Either the user or the extension has already configured this setting.
+      info(
+        `Found that '${key}' is set to '${workspaceFolderValue}' in '${folder.name}' folder`
+      )
       continue
     }
+
+    info(`Setting '${key}' to '${value}' in '${folder.name}' folder`)
 
     await settings.update(
       key,

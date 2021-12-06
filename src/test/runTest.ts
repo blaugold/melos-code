@@ -43,6 +43,10 @@ async function main() {
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: [workspaceDir],
+      extensionTestsEnv: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        MELOS_CODE_CONSOLE_LOG_LEVEL: 'debug',
+      },
     })
   } catch (err) {
     console.error('Failed to run tests')

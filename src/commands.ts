@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { debug } from './logging'
 import { buildMelosScriptTask } from './script-task-provider'
 
 export function registerMelosCommands(context: vscode.ExtensionContext) {
@@ -27,6 +28,11 @@ export interface MelosRunScriptCommandArgs {
 
 function runScriptCommandHandler() {
   return (args: MelosRunScriptCommandArgs) => {
+    debug(`command:runScript`, {
+      ...args,
+      workspaceFolder: args.workspaceFolder.name,
+    })
+
     return vscode.tasks.executeTask(
       buildMelosScriptTask(
         {

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { debug, info } from './logging'
 import { fileExists } from './utils/fs-utils'
 import { isOpenWorkspaceFolder } from './utils/vscode-utils'
 import { melosYamlFile } from './workspace-config'
@@ -62,6 +63,8 @@ export async function initMelosWorkspaces(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     melosYamlWatcher.onDidCreate(async (uri) => {
+      debug(`onDidCreate: ${uri}`)
+
       const folder = vscode.workspace.getWorkspaceFolder(uri)
       if (folder) {
         addMelosWorkspace(folder)
@@ -71,6 +74,8 @@ export async function initMelosWorkspaces(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     melosYamlWatcher.onDidDelete(async (uri) => {
+      debug(`onDidDelete: ${uri}`)
+
       const folder = vscode.workspace.getWorkspaceFolder(uri)
       if (folder) {
         removeMelosWorkspace(folder)
@@ -85,7 +90,13 @@ const onDidChangeWorkspaceFoldersEmitter =
   new vscode.EventEmitter<vscode.WorkspaceFoldersChangeEvent>()
 
 function addMelosWorkspace(folder: vscode.WorkspaceFolder) {
+  if (workspaceFolders.includes(folder)) {
+    return
+  }
+
   workspaceFolders.push(folder)
+  info(`Added Melos workspace: ${folder.name}`)
+
   onDidChangeWorkspaceFoldersEmitter.fire({
     added: [folder],
     removed: [],
@@ -94,13 +105,17 @@ function addMelosWorkspace(folder: vscode.WorkspaceFolder) {
 
 function removeMelosWorkspace(folder: vscode.WorkspaceFolder) {
   const index = workspaceFolders.indexOf(folder)
-  if (index >= 0) {
-    workspaceFolders.splice(index, 1)
-    onDidChangeWorkspaceFoldersEmitter.fire({
-      added: [],
-      removed: [folder],
-    })
+  if (index === -1) {
+    return
   }
+
+  workspaceFolders.splice(index, 1)
+  info(`Removed Melos workspace: ${folder.name}`)
+
+  onDidChangeWorkspaceFoldersEmitter.fire({
+    added: [],
+    removed: [folder],
+  })
 }
 
 export async function isMelosWorkspace(folder: vscode.WorkspaceFolder) {
@@ -116,7 +131,7 @@ async function getMelosWorkspaceFolders() {
   const result: vscode.WorkspaceFolder[] = []
   for (const folder of workspaceFolders) {
     if (await isMelosWorkspace(folder)) {
-      result.push(folder)
+      addMelosWorkspace(folder)
     }
   }
   return result

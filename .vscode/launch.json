@@ -25,6 +25,9 @@
         "--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
         "${workspaceFolder}/melos-workspaces/test"
       ],
+      "env": {
+        "MELOS_CODE_CONSOLE_LOG_LEVEL": "debug"
+      },
       "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
       "preLaunchTask": "npm: pretest"
     }

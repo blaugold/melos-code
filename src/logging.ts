@@ -130,8 +130,8 @@ function formatLogMessage(message: LogMessage): string {
   let result = ''
 
   result += `${message.date.toISOString()} `
-  result += `[${message.level}]`.padEnd(logLevelMaxLength + 2)
-  result += `: ${message.message}`
+  result += `[${message.level.toUpperCase()}]`.padStart(logLevelMaxLength + 2)
+  result += ` ${message.message}`
 
   const error = message.error
   if (error) {

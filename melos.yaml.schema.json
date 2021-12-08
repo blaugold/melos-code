@@ -54,6 +54,10 @@
               "type": "boolean",
               "description": "Whether to add links to commits in the generated CHANGELOG.md.\n\nDisabled by default."
             },
+            "workspaceChangelog": {
+              "type": "boolean",
+              "description": "Whether to additionally generate a summary CHANGELOG.md at the root of the workspace."
+            },
             "branch": {
               "type": "string",
               "description": "If specified, prevents `melos version` from being used inside branches other than the one specified."

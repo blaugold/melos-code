@@ -1,8 +1,13 @@
 import * as vscode from 'vscode'
+import { executeMelosCommand } from './execute'
 import { debug } from './logging'
 import { buildMelosScriptTask } from './script-task-provider'
+import { resolveWorkspaceFolder } from './utils/vscode-utils'
 
 export function registerMelosCommands(context: vscode.ExtensionContext) {
+  registerMelosToolCommand(context, { name: 'bootstrap' })
+  registerMelosToolCommand(context, { name: 'clean' })
+
   context.subscriptions.push(
     vscode.commands.registerCommand(
       'melos.runScript',
@@ -43,4 +48,25 @@ function runScriptCommandHandler() {
       )
     )
   }
+}
+
+function registerMelosToolCommand(
+  context: vscode.ExtensionContext,
+  options: { name: string }
+) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand(`melos.${options.name}`, async () => {
+      debug(`command:${options.name}`)
+
+      const workspaceFolder = await resolveWorkspaceFolder()
+      if (!workspaceFolder) {
+        return
+      }
+
+      return executeMelosCommand({
+        name: options.name,
+        folder: workspaceFolder,
+      })
+    })
+  )
 }

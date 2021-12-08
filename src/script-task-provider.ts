@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { melosExecutableName } from './env'
 import { info } from './logging'
 import { isWorkspaceFolder } from './utils/vscode-utils'
 import { loadMelosWorkspaceConfig } from './workspace-config'
@@ -103,6 +104,6 @@ export function buildMelosScriptTask(
     workspaceFolder,
     definition.script,
     definition.type,
-    new vscode.ShellExecution(`melos run ${definition.script}`)
+    new vscode.ShellExecution(`${melosExecutableName} run ${definition.script}`)
   )
 }

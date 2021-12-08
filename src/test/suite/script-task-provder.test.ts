@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import * as vscode from 'vscode'
-import { createMelosYaml } from '../utils/melos-yaml-utils'
+import { melosExecutableName } from '../../env'
 import { retryUntilResult } from '../utils/misc-utils'
 import { workspaceFolder } from '../utils/vscode-workspace-utils'
 
@@ -20,5 +20,9 @@ suite('Melos script task provider', () => {
     assert.strictEqual(task.detail, 'b')
     assert.deepStrictEqual(task.definition, { type: 'melos', script: 'a' })
     assert.strictEqual(task.scope, workspaceFolder())
+    assert.strictEqual(
+      (task.execution as vscode.ShellExecution).commandLine,
+      `${melosExecutableName} run a`
+    )
   })
 })

@@ -3,6 +3,8 @@ import * as Mocha from 'mocha'
 import * as path from 'path'
 
 export function run(testsRoot: string): Promise<void> {
+  require('source-map-support').install()
+
   // Create the mocha test
   const mocha = new Mocha({
     ui: 'tdd',

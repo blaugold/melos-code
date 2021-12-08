@@ -19,6 +19,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Setup dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:

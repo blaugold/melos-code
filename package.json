@@ -33,7 +33,9 @@
   },
   "activationEvents": [
     "onLanguage:yaml",
-    "workspaceContains:melos.yaml"
+    "workspaceContains:melos.yaml",
+    "onCommand:melos.bootstrap",
+    "onCommand:melos.clean"
   ],
   "contributes": {
     "yamlValidation": [
@@ -55,6 +57,20 @@
           }
         },
         "when": "shellExecutionSupported"
+      }
+    ],
+    "commands": [
+      {
+        "command": "melos.bootstrap",
+        "title": "Bootstrap",
+        "category": "Melos",
+        "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
+      },
+      {
+        "command": "melos.clean",
+        "title": "Clean",
+        "category": "Melos",
+        "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
       }
     ]
   },
@@ -94,6 +110,7 @@
     "glob": "^7.1.7",
     "mocha": "^9.1.3",
     "prettier": "2.5.0",
+    "source-map-support": "^0.5.21",
     "typescript": "^4.4.4"
   },
   "dependencies": {

@@ -3,3 +3,5 @@ packages:
   - packages/**
 scripts:
   a: b
+ide:
+  intellij: false

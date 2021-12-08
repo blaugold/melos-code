@@ -1,5 +1,7 @@
 import assert = require('assert')
 import * as vscode from 'vscode'
+import { melosExecutableName } from '../../env'
+import { workspaceFolder } from '../utils/vscode-workspace-utils'
 
 suite('Melos commands as VS Code commands', () => {
   commandTest('bootstrap')
@@ -14,9 +16,10 @@ async function commandTest(name: string) {
         assert.strictEqual(task.definition.type, 'melos')
         assert.strictEqual(task.name, name)
         assert.strictEqual(task.source, 'melos')
+        assert.strictEqual(task.scope, workspaceFolder())
         assert.strictEqual(
           (task.execution as vscode.ShellExecution).commandLine,
-          `melos ${name}`
+          `${melosExecutableName} ${name}`
         )
 
         disposable.dispose()
@@ -24,7 +27,10 @@ async function commandTest(name: string) {
       })
     })
 
-    await vscode.commands.executeCommand(`melos.${name}`)
+    const exitCode = await vscode.commands.executeCommand<number | undefined>(
+      `melos.${name}`
+    )
+    assert.strictEqual(exitCode, 0)
 
     return didStartTask
   })

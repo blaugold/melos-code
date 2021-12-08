@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { melosExecutableName } from './env'
 import { info } from './logging'
 
 /**
@@ -9,7 +10,7 @@ import { info } from './logging'
 export async function executeMelosCommand(options: {
   name: string
   folder: vscode.WorkspaceFolder
-}) {
+}): Promise<number | undefined> {
   const task = new vscode.Task(
     {
       type: 'melos',
@@ -17,7 +18,7 @@ export async function executeMelosCommand(options: {
     options.folder,
     options.name,
     'melos',
-    new vscode.ShellExecution(`melos ${options.name}`)
+    new vscode.ShellExecution(`${melosExecutableName} ${options.name}`)
   )
   task.presentationOptions = {
     reveal: vscode.TaskRevealKind.Silent,
@@ -25,11 +26,11 @@ export async function executeMelosCommand(options: {
     showReuseMessage: false,
   }
 
-  const taskEnded = new Promise<void>((resolve) => {
-    const didEndTaskDisposable = vscode.tasks.onDidEndTask((event) => {
+  const taskEnded = new Promise<number | undefined>((resolve) => {
+    const didEndTaskDisposable = vscode.tasks.onDidEndTaskProcess((event) => {
       if (event.execution.task === task) {
         didEndTaskDisposable.dispose()
-        resolve()
+        resolve(event.exitCode)
       }
     })
   })
@@ -38,7 +39,7 @@ export async function executeMelosCommand(options: {
 
   const taskExecution = await vscode.tasks.executeTask(task)
 
-  await vscode.window.withProgress(
+  const exitCode = await vscode.window.withProgress(
     {
       title: `Executing 'melos ${options.name}'`,
       location: vscode.ProgressLocation.Notification,
@@ -53,5 +54,9 @@ export async function executeMelosCommand(options: {
   const end = Date.now()
   const duration = end - start
 
-  info(`Executed 'melos ${options.name}' in ${duration}ms`)
+  info(
+    `Executed 'melos ${options.name}' in ${duration}ms with exit code ${exitCode}`
+  )
+
+  return exitCode
 }

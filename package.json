@@ -35,7 +35,8 @@
     "onLanguage:yaml",
     "workspaceContains:melos.yaml",
     "onCommand:melos.bootstrap",
-    "onCommand:melos.clean"
+    "onCommand:melos.clean",
+    "onCommand:melos.showPackageGraph"
   ],
   "contributes": {
     "yamlValidation": [
@@ -69,6 +70,12 @@
       {
         "command": "melos.clean",
         "title": "Clean",
+        "category": "Melos",
+        "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
+      },
+      {
+        "command": "melos.showPackageGraph",
+        "title": "Show package graph",
         "category": "Melos",
         "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
       }

@@ -1,4 +1,4 @@
-import assert = require('assert')
+import * as assert from 'assert'
 import * as vscode from 'vscode'
 import { melosExecutableName } from '../../env'
 import { workspaceFolder } from '../utils/vscode-workspace-utils'

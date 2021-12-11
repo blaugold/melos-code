@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
-import { executeMelosCommand } from './execute'
+import { executeMelosCommand, melosList, MelosListFormat } from './execute'
 import { debug } from './logging'
+import { showPackageGraphView } from './package_graph_view'
 import { buildMelosScriptTask } from './script-task-provider'
 import { resolveWorkspaceFolder } from './utils/vscode-utils'
 
@@ -13,6 +14,34 @@ export function registerMelosCommands(context: vscode.ExtensionContext) {
       'melos.runScript',
       runScriptCommandHandler()
     )
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'melos.showPackageGraph',
+      showPackageGraphCommandHandler()
+    )
+  )
+}
+
+function registerMelosToolCommand(
+  context: vscode.ExtensionContext,
+  options: { name: string }
+) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand(`melos.${options.name}`, async () => {
+      debug(`command:${options.name}`)
+
+      const workspaceFolder = await resolveWorkspaceFolder()
+      if (!workspaceFolder) {
+        return
+      }
+
+      return executeMelosCommand({
+        name: options.name,
+        folder: workspaceFolder,
+      })
+    })
   )
 }
 
@@ -50,23 +79,21 @@ function runScriptCommandHandler() {
   }
 }
 
-function registerMelosToolCommand(
-  context: vscode.ExtensionContext,
-  options: { name: string }
-) {
-  context.subscriptions.push(
-    vscode.commands.registerCommand(`melos.${options.name}`, async () => {
-      debug(`command:${options.name}`)
+function showPackageGraphCommandHandler() {
+  return async () => {
+    // Get melos workspace folder.
+    const workspaceFolder = await resolveWorkspaceFolder()
+    if (!workspaceFolder) {
+      return
+    }
 
-      const workspaceFolder = await resolveWorkspaceFolder()
-      if (!workspaceFolder) {
-        return
-      }
-
-      return executeMelosCommand({
-        name: options.name,
-        folder: workspaceFolder,
-      })
+    // Get package graph data.
+    const dotGraph = await melosList({
+      format: MelosListFormat.gviz,
+      folder: workspaceFolder,
     })
-  )
+
+    // Show package graph.
+    return showPackageGraphView({ dotGraph, folder: workspaceFolder })
+  }
 }

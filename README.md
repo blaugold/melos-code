@@ -7,5 +7,6 @@ This extension adds support for using [Melos] with Visual Studio Code.
 - Provide scripts in `melos.yaml` as tasks
 - Apply defaults for Dart VS Code extension settings
 - Run `bootstrap` and `clean` commands as VS Code commands
+- Show package graph
 
 [melos]: https://pub.dev/packages/melos

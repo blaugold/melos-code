@@ -1,6 +1,10 @@
+import { exec } from 'child_process'
+import { promisify } from 'util'
 import * as vscode from 'vscode'
 import { melosExecutableName } from './env'
 import { info } from './logging'
+
+const execAsync = promisify(exec)
 
 /**
  * Executes a melos command as a VS Code task.
@@ -59,4 +63,52 @@ export async function executeMelosCommand(options: {
   )
 
   return exitCode
+}
+
+export async function executeMelosCommandForResult(options: {
+  args: string[]
+  folder: vscode.WorkspaceFolder
+}): Promise<string> {
+  const commandLine = `${melosExecutableName} ${options.args.join(' ')}`
+  const result = execAsync(commandLine, {
+    encoding: 'utf8',
+    cwd: options.folder.uri.fsPath,
+  })
+  const output = await result
+  const exitCode = result.child.exitCode
+  if (exitCode !== 0) {
+    throw new Error(
+      `Expected to get exit code 0 but got ${exitCode}, when executing:\n'${commandLine}'`
+    )
+  }
+  return output.stdout
+}
+
+export enum MelosListFormat {
+  json = 'json',
+  graph = 'graph',
+  gviz = 'gviz',
+}
+
+export function melosList(options: {
+  format: MelosListFormat.gviz
+  folder: vscode.WorkspaceFolder
+}): Promise<string>
+
+export async function melosList(options: {
+  format: MelosListFormat
+  folder: vscode.WorkspaceFolder
+}): Promise<any> {
+  const rawResult = await executeMelosCommandForResult({
+    args: ['list', `--${options.format}`],
+    folder: options.folder,
+  })
+
+  switch (options.format) {
+    case MelosListFormat.json:
+    case MelosListFormat.graph:
+      return JSON.parse(rawResult)
+    case MelosListFormat.gviz:
+      return rawResult
+  }
 }

@@ -14,7 +14,10 @@
         "${workspaceFolder}/src/test/workspaces/dev"
       ],
       "outFiles": ["${workspaceFolder}/out/**/*.js"],
-      "preLaunchTask": "${defaultBuildTask}"
+      "preLaunchTask": "${defaultBuildTask}",
+      "env": {
+        "MELOS_CODE_CONSOLE_LOG_LEVEL": "debug"
+      }
     },
     {
       "name": "Extension Tests (suite)",

@@ -160,7 +160,7 @@ class ConsoleLogWriter extends LogWriter {
   }
 
   write(message: LogMessage): void {
-    console[message.level](formatLogMessage(message))
+    console.log(formatLogMessage(message))
   }
 }
 

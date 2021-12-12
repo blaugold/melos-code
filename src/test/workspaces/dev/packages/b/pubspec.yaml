@@ -1,0 +1,9 @@
+name: b
+version: 0.0.0
+
+environment:
+  sdk: '>=2.15.0 <3.0.0'
+
+dev_dependencies:
+  a:
+    path: ../a

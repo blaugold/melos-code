@@ -1,8 +1,10 @@
 import { exec } from 'child_process'
+import { kebabCase } from 'lodash'
 import { promisify } from 'util'
 import * as vscode from 'vscode'
 import { melosExecutableName } from './env'
-import { info } from './logging'
+import { info, trace } from './logging'
+import { MelosPackageFilters } from './package-filters'
 
 const execAsync = promisify(exec)
 
@@ -81,6 +83,9 @@ export async function executeMelosCommandForResult(options: {
       `Expected to get exit code 0 but got ${exitCode}, when executing:\n'${commandLine}'`
     )
   }
+  trace(
+    `Executed '${commandLine}'\nStdout:\n${output.stdout}\nStderr:\n${output.stderr}`
+  )
   return output.stdout
 }
 
@@ -90,17 +95,46 @@ export enum MelosListFormat {
   gviz = 'gviz',
 }
 
+export enum MelosPackageType {
+  dartPackage,
+  flutterPackage,
+  flutterPlugin,
+  flutterApp,
+}
+
+export interface MelosListResult {
+  name: string
+  version: string
+  private: boolean
+  location: string
+  type: MelosPackageType
+}
+
+export function melosList(options: {
+  format: MelosListFormat.json
+  folder: vscode.WorkspaceFolder
+  filters?: MelosPackageFilters
+}): Promise<MelosListResult[]>
+
 export function melosList(options: {
   format: MelosListFormat.gviz
   folder: vscode.WorkspaceFolder
+  filters?: MelosPackageFilters
 }): Promise<string>
 
 export async function melosList(options: {
   format: MelosListFormat
   folder: vscode.WorkspaceFolder
+  filters?: MelosPackageFilters
 }): Promise<any> {
+  const args = ['list', `--${options.format}`]
+
+  if (options.filters) {
+    args.push(...buildPackageFilterOption(options.filters))
+  }
+
   const rawResult = await executeMelosCommandForResult({
-    args: ['list', `--${options.format}`],
+    args,
     folder: options.folder,
   })
 
@@ -111,4 +145,27 @@ export async function melosList(options: {
     case MelosListFormat.gviz:
       return rawResult
   }
+}
+
+function buildPackageFilterOption(filters: MelosPackageFilters): string[] {
+  const result: string[] = []
+
+  for (const key of Object.keys(filters)) {
+    const optionFlag = `--${kebabCase(key)}`
+    const value = (filters as any)[key]
+
+    if (value === undefined) {
+      continue
+    }
+
+    if (Array.isArray(value)) {
+      for (const valueItem of value) {
+        result.push(optionFlag, String(valueItem))
+      }
+    } else {
+      result.push(optionFlag, String(value))
+    }
+  }
+
+  return result
 }

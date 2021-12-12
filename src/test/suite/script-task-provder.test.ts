@@ -11,10 +11,9 @@ suite('Melos script task provider', () => {
       return tasks.length === 0 ? undefined : tasks
     })
 
-    assert.strictEqual(tasks.length, 1)
+    assert.strictEqual(tasks.length, 2)
 
-    const task = tasks[0]
-
+    let task = tasks[0]
     assert.strictEqual(task.name, 'a')
     assert.strictEqual(task.source, 'melos')
     assert.strictEqual(task.detail, 'b')
@@ -22,7 +21,18 @@ suite('Melos script task provider', () => {
     assert.strictEqual(task.scope, workspaceFolder())
     assert.strictEqual(
       (task.execution as vscode.ShellExecution).commandLine,
-      `${melosExecutableName} run a`
+      `${melosExecutableName} run --no-select a`
+    )
+
+    task = tasks[1]
+    assert.strictEqual(task.name, 'b')
+    assert.strictEqual(task.source, 'melos')
+    assert.strictEqual(task.detail, 'melos exec -- echo b')
+    assert.deepStrictEqual(task.definition, { type: 'melos', script: 'b' })
+    assert.strictEqual(task.scope, workspaceFolder())
+    assert.strictEqual(
+      (task.execution as vscode.ShellExecution).commandLine,
+      `${melosExecutableName} run --no-select b`
     )
   })
 })

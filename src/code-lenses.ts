@@ -3,6 +3,7 @@ import { MelosRunScriptCommandArgs } from './commands'
 import { debug } from './logging'
 import { vscodeRangeFromNode } from './utils/yaml-utils'
 import {
+  isMelosExecScript,
   MelosWorkspaceConfig,
   parseMelosWorkspaceConfig,
 } from './workspace-config'
@@ -43,7 +44,9 @@ class MelosYamlCodeLenseProvider implements vscode.CodeLensProvider {
       melosConfig.scripts.map((script) => script.name.value)
     )
 
-    return melosConfig.scripts.map((script) => {
+    const codeLenses: vscode.CodeLens[] = []
+
+    for (const script of melosConfig.scripts) {
       const name = script.name
 
       const runScriptCommandArgs: MelosRunScriptCommandArgs = {
@@ -51,11 +54,30 @@ class MelosYamlCodeLenseProvider implements vscode.CodeLensProvider {
         script: name.value,
       }
 
-      return new vscode.CodeLens(vscodeRangeFromNode(document, name.yamlNode), {
-        title: `Run script`,
-        command: 'melos.runScript',
-        arguments: [runScriptCommandArgs],
-      })
-    })
+      codeLenses.push(
+        new vscode.CodeLens(vscodeRangeFromNode(document, name.yamlNode), {
+          title: `Run script`,
+          command: 'melos.runScript',
+          arguments: [runScriptCommandArgs],
+        })
+      )
+
+      if (isMelosExecScript(script)) {
+        const runInAllPackagesCommandArgs: MelosRunScriptCommandArgs = {
+          ...runScriptCommandArgs,
+          runInAllPackages: true,
+        }
+
+        codeLenses.push(
+          new vscode.CodeLens(vscodeRangeFromNode(document, name.yamlNode), {
+            title: `Run script in all packages`,
+            command: 'melos.runScript',
+            arguments: [runInAllPackagesCommandArgs],
+          })
+        )
+      }
+    }
+
+    return codeLenses
   }
 }

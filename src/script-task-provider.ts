@@ -27,6 +27,21 @@ export interface MelosScriptTaskDefinition extends vscode.TaskDefinition {
   script: string
 }
 
+/**
+ * A Melos script task definition.
+ */
+export interface MelosExecScriptTaskDefinition
+  extends MelosScriptTaskDefinition {
+  /**
+   * The command to execute through `melos exec`.
+   */
+  command: string
+  /**
+   * If defined, the only package to run the script in.
+   */
+  package?: string
+}
+
 function isMelosScriptTaskDefinition(
   definition: vscode.TaskDefinition
 ): definition is MelosScriptTaskDefinition {
@@ -104,6 +119,33 @@ export function buildMelosScriptTask(
     workspaceFolder,
     definition.script,
     definition.type,
-    new vscode.ShellExecution(`${melosExecutableName} run ${definition.script}`)
+    new vscode.ShellExecution(
+      `${melosExecutableName} run --no-select ${definition.script}`
+    )
+  )
+}
+
+export function buildMelosExecScriptTask(
+  definition: MelosExecScriptTaskDefinition,
+  workspaceFolder: vscode.WorkspaceFolder
+) {
+  const options: string[] = []
+
+  if (definition.package) {
+    options.push('--scope', definition.package)
+  }
+
+  return vscode.tasks.executeTask(
+    new vscode.Task(
+      definition,
+      workspaceFolder,
+      definition.script,
+      definition.name,
+      new vscode.ShellExecution(
+        `${melosExecutableName} exec ${options.join(' ')} -- ${
+          definition.command
+        }`
+      )
+    )
   )
 }

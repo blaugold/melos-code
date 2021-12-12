@@ -3,5 +3,6 @@ packages:
   - packages/**
 scripts:
   a: b
+  b: melos exec -- echo b
 ide:
   intellij: false

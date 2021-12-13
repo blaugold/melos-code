@@ -18,16 +18,20 @@ suite('execute', () => {
 
       assert.deepStrictEqual(result, [
         {
-          location: vscode.Uri.joinPath(workspaceFolder().uri, 'packages/a')
-            .path,
+          location: vscode.Uri.joinPath(
+            workspaceFolder().uri,
+            'packages/a'
+          ).fsPath.toLowerCase(),
           name: 'a',
           private: false,
           type: MelosPackageType.dartPackage,
           version: '0.0.0',
         },
         {
-          location: vscode.Uri.joinPath(workspaceFolder().uri, 'packages/b')
-            .path,
+          location: vscode.Uri.joinPath(
+            workspaceFolder().uri,
+            'packages/b'
+          ).fsPath.toLowerCase(),
           name: 'b',
           private: false,
           type: MelosPackageType.dartPackage,

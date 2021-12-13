@@ -1,3 +1,13 @@
+## [0.2.1](https://github.com/blaugold/melos-code/compare/v0.2.0...v0.2.1) (2021-12-13)
+
+
+### Features
+
+* add `Melos: Run script` command ([#17](https://github.com/blaugold/melos-code/issues/17)) ([f3769d1](https://github.com/blaugold/melos-code/commit/f3769d16f42fc6021c3440a5d97851a069dfee4f)), closes [#16](https://github.com/blaugold/melos-code/issues/16) [#15](https://github.com/blaugold/melos-code/issues/15)
+* add support for showing package graph ([#14](https://github.com/blaugold/melos-code/issues/14)) ([1857924](https://github.com/blaugold/melos-code/commit/185792434a8decb7fbd1c9af821c026ee0399a33)), closes [#5](https://github.com/blaugold/melos-code/issues/5)
+
+
+
 # [0.2.0](https://github.com/blaugold/melos-code/compare/v0.1.0...v0.2.0) (2021-12-08)
 
 

@@ -65,7 +65,7 @@ export interface MelosExecCommand {
   /**
    * The options for the `exec` command.
    */
-  readonly options: string
+  readonly options: string[]
   /**
    * The actual command to run.
    */
@@ -93,7 +93,7 @@ export function parseMelosExecCommand(
   }
 
   return {
-    options,
+    options: options.split(/\s+/),
     command,
   }
 }

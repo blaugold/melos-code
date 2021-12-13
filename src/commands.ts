@@ -200,14 +200,16 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
     }
 
     // Execute the script in a single package.
-    return buildMelosExecScriptTask(
-      {
-        type: 'melos',
-        script: scriptConfig!.name.value,
-        package: packageName,
-        command: melosExecCommand.command,
-      },
-      workspaceFolder
+    return vscode.tasks.executeTask(
+      buildMelosExecScriptTask(
+        {
+          type: 'melos',
+          script: scriptConfig!.name.value,
+          execOptions: ['--scope', packageName, ...melosExecCommand.options],
+          command: melosExecCommand.command,
+        },
+        workspaceFolder
+      )
     )
   }
 }

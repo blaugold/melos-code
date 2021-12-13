@@ -3,9 +3,13 @@ import * as vscode from 'vscode'
 import { Document, parseDocument } from 'yaml'
 import { Node, Scalar, YAMLMap } from 'yaml/types'
 import { info, warn } from './logging'
+import { MelosPackageFilters } from './package-filters'
 import { readOptionalFile } from './utils/fs-utils'
 
 export const melosYamlFile = 'melos.yaml'
+
+// https://regex101.com/r/idiNSJ/1
+const melosExecRegex = /^\s*melos\s*exec/
 
 /**
  * A Melos workspace configuration.
@@ -16,11 +20,11 @@ export interface MelosWorkspaceConfig {
   /**
    * The YAML document from which the configuration was parsed.
    */
-  yamlDoc: Document
+  readonly yamlDoc: Document
   /**
    * The configured Melos scripts.
    */
-  scripts: MelosScriptConfig[]
+  readonly scripts: readonly MelosScriptConfig[]
 }
 
 /**
@@ -30,12 +34,17 @@ export interface MelosScriptConfig {
   /**
    * The name of the script.
    */
-  name: MelosScriptName
+  readonly name: MelosScriptName
 
   /**
    * The command to run for the script.
    */
-  run?: MelosScriptCommand
+  readonly run?: MelosScriptCommand
+
+  /**
+   * The package filters to apply for the script.
+   */
+  readonly packageSelect?: MelosPackageFilters
 }
 
 /**
@@ -45,11 +54,11 @@ export interface MelosScriptName {
   /**
    * The name of the script.
    */
-  value: string
+  readonly value: string
   /**
    * The YAML node that contains the name.
    */
-  yamlNode: Node
+  readonly yamlNode: Node
 }
 
 /**
@@ -59,11 +68,30 @@ export interface MelosScriptCommand {
   /**
    * The command to run.
    */
-  value: string
+  readonly value: string
   /**
    * The YAML node that contains the name.
    */
-  yamlNode: Node
+  readonly yamlNode: Node
+
+  /**
+   * If the command is a `melos exec` command, the parsed representation of it.
+   */
+  readonly melosExec?: MelosExecCommand
+}
+
+/**
+ * Parsed representation of a `melos exec` command line.
+ */
+export interface MelosExecCommand {
+  /**
+   * The options for the `exec` command.
+   */
+  readonly options: string[]
+  /**
+   * The actual command to run.
+   */
+  readonly command: string
 }
 
 /**
@@ -167,6 +195,9 @@ function melosScriptsConfigsFromYaml(value: any): MelosScriptConfig[] {
         return {
           name: scriptName,
           run: melosScriptCommandFromYaml(definition.get('run', true)),
+          packageSelect: melosPackageFiltersFromYaml(
+            definition.get('select-package', true)
+          ),
         }
       }
 
@@ -181,10 +212,90 @@ function melosScriptCommandFromYaml(
     return {
       value: value.value,
       yamlNode: value,
+      melosExec: parseMelosExecCommand(value.value),
     }
   }
 
-  return undefined
+  return
+}
+
+function parseMelosExecCommand(
+  commandLine: string
+): MelosExecCommand | undefined {
+  if (!melosExecRegex.test(commandLine)) {
+    return
+  }
+
+  const [options, command] = commandLine
+    .replace(melosExecRegex, '')
+    .split(' -- ')
+    .map((part) => part.trim())
+  if (options === undefined || command === undefined) {
+    return
+  }
+
+  return {
+    options: options === '' ? [] : options.split(/\s+/),
+    command,
+  }
+}
+
+function melosPackageFiltersFromYaml(
+  value: any
+): MelosPackageFilters | undefined {
+  if (!(value instanceof YAMLMap)) {
+    return
+  }
+
+  const json = value.toJSON() as any
+
+  function getStringList(key: string): string[] | undefined {
+    const value = json[key]
+    if (value === undefined) {
+      return
+    }
+
+    if (Array.isArray(value)) {
+      return value.filter((value) => typeof value === 'string')
+    }
+
+    return typeof value === 'string' ? [value] : undefined
+  }
+
+  function getString(key: string): string | undefined {
+    const value = json[key]
+    if (value === undefined) {
+      return
+    }
+
+    return typeof value === 'string' ? value : undefined
+  }
+
+  function getBoolean(key: string): boolean | undefined {
+    const value = json[key]
+    if (value === undefined) {
+      return
+    }
+
+    return typeof value === 'boolean' ? value : undefined
+  }
+
+  const noPrivate = getBoolean('no-private')
+  const privateFromNoPrivate = noPrivate === undefined ? undefined : !noPrivate
+
+  return {
+    scope: getStringList('scope'),
+    ignore: getStringList('ignore'),
+    dirExists: getStringList('dir-exists'),
+    fileExists: getStringList('file-exists'),
+    dependsOn: getStringList('depends-on'),
+    noDependsOn: getStringList('no-depends-on'),
+    since: getString('since'),
+    private: getBoolean('private') ?? privateFromNoPrivate,
+    published: getBoolean('published'),
+    nullSafety: getBoolean('null-safety'),
+    flutter: getBoolean('flutter'),
+  }
 }
 
 // === melos.yaml schema ======================================================

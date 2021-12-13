@@ -4,3 +4,10 @@ packages:
 
 scripts:
   hello: echo 'Hello World'
+  hello_exec: melos exec -- echo 'Hello World'
+  hello_exec_filter:
+    run: melos exec -- echo 'Hello World'
+    select-package:
+      scope:
+        - a
+        - b

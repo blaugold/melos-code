@@ -1,4 +1,5 @@
 .vscode-test/
+.dart_tool/
 out/
 node_modules/
 CHANGELOG.md

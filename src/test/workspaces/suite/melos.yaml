@@ -3,5 +3,8 @@ packages:
   - packages/**
 scripts:
   a: b
+  b: melos exec -- echo b
+  echo: echo Hello world
+  echo_exec: melos exec -- echo Hello world
 ide:
   intellij: false

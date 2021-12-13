@@ -36,6 +36,7 @@
     "workspaceContains:melos.yaml",
     "onCommand:melos.bootstrap",
     "onCommand:melos.clean",
+    "onCommand:melos.runScript",
     "onCommand:melos.showPackageGraph"
   ],
   "contributes": {
@@ -70,6 +71,12 @@
       {
         "command": "melos.clean",
         "title": "Clean",
+        "category": "Melos",
+        "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
+      },
+      {
+        "command": "melos.runScript",
+        "title": "Run script",
         "category": "Melos",
         "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
       },

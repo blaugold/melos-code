@@ -147,7 +147,9 @@ export async function melosList(options: {
   }
 }
 
-function buildPackageFilterOption(filters: MelosPackageFilters): string[] {
+export function buildPackageFilterOption(
+  filters: MelosPackageFilters
+): string[] {
   const result: string[] = []
 
   for (const key of Object.keys(filters)) {
@@ -163,7 +165,11 @@ function buildPackageFilterOption(filters: MelosPackageFilters): string[] {
         result.push(optionFlag, String(valueItem))
       }
     } else {
-      result.push(optionFlag, String(value))
+      if (typeof value === 'boolean') {
+        result.push(value ? optionFlag : `--no-${kebabCase(key)}`)
+      } else {
+        result.push(optionFlag, String(value))
+      }
     }
   }
 

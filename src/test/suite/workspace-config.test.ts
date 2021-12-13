@@ -61,5 +61,98 @@ scripts:
         }
       )
     })
+
+    test('parse melos exec command', () => {
+      let config = parseMelosWorkspaceConfig(
+        `scripts:
+    a: melos exec -- a
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].run?.melosExec, {
+        options: [],
+        command: 'a',
+      })
+
+      config = parseMelosWorkspaceConfig(
+        `scripts:
+    a: melos exec --c 1 -- a
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].run?.melosExec, {
+        options: ['--c', '1'],
+        command: 'a',
+      })
+    })
+
+    test('parse select-package section of scripts', () => {
+      let config = parseMelosWorkspaceConfig(
+        `scripts:
+    a:
+        run: b
+        select-package:
+            scope: a
+            ignore: b
+            file-exists: c
+            dir-exists: d
+            depends-on: e
+            no-depends-on: f
+            since: g
+            private: true
+            published: true
+            null-safety: true
+            flutter: true
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].packageSelect, {
+        scope: ['a'],
+        ignore: ['b'],
+        fileExists: ['c'],
+        dirExists: ['d'],
+        dependsOn: ['e'],
+        noDependsOn: ['f'],
+        since: 'g',
+        private: true,
+        published: true,
+        nullSafety: true,
+        flutter: true,
+      })
+
+      config = parseMelosWorkspaceConfig(
+        `scripts:
+    a:
+        run: b
+        select-package:
+            scope:
+                - a
+            ignore:
+                - b
+            file-exists:
+                - c
+            dir-exists:
+                - d
+            depends-on:
+                - e
+            no-depends-on:
+                - f
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].packageSelect, {
+        scope: ['a'],
+        ignore: ['b'],
+        fileExists: ['c'],
+        dirExists: ['d'],
+        dependsOn: ['e'],
+        noDependsOn: ['f'],
+        since: undefined,
+        private: undefined,
+        published: undefined,
+        nullSafety: undefined,
+        flutter: undefined,
+      })
+    })
   })
 })

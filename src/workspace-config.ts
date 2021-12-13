@@ -48,57 +48,6 @@ export interface MelosScriptConfig {
 }
 
 /**
- * Whether the given script config contains a `melos exec` command line.
- */
-export function isMelosExecScript(scriptConfig: MelosScriptConfig): boolean {
-  if (!scriptConfig.run) {
-    return false
-  }
-
-  return melosExecRegex.test(scriptConfig.run.value)
-}
-
-/**
- * Parsed representation of a `melos exec` command line.
- */
-export interface MelosExecCommand {
-  /**
-   * The options for the `exec` command.
-   */
-  readonly options: string[]
-  /**
-   * The actual command to run.
-   */
-  readonly command: string
-}
-
-/**
- * Parses a `melos exec` command line.
- *
- * Returns `undefined` if the command line is invalid.
- */
-export function parseMelosExecCommand(
-  commandLine: string
-): MelosExecCommand | undefined {
-  if (!melosExecRegex.test(commandLine)) {
-    return
-  }
-
-  const [options, command] = commandLine
-    .replace(melosExecRegex, '')
-    .split('--')
-    .map((part) => part.trim())
-  if (options === undefined || command === undefined) {
-    return
-  }
-
-  return {
-    options: options.split(/\s+/),
-    command,
-  }
-}
-
-/**
  * The name of a Melos script.
  */
 export interface MelosScriptName {
@@ -124,6 +73,25 @@ export interface MelosScriptCommand {
    * The YAML node that contains the name.
    */
   readonly yamlNode: Node
+
+  /**
+   * If the command is a `melos exec` command, the parsed representation of it.
+   */
+  readonly melosExec?: MelosExecCommand
+}
+
+/**
+ * Parsed representation of a `melos exec` command line.
+ */
+export interface MelosExecCommand {
+  /**
+   * The options for the `exec` command.
+   */
+  readonly options: string[]
+  /**
+   * The actual command to run.
+   */
+  readonly command: string
 }
 
 /**
@@ -244,10 +212,32 @@ function melosScriptCommandFromYaml(
     return {
       value: value.value,
       yamlNode: value,
+      melosExec: parseMelosExecCommand(value.value),
     }
   }
 
   return
+}
+
+function parseMelosExecCommand(
+  commandLine: string
+): MelosExecCommand | undefined {
+  if (!melosExecRegex.test(commandLine)) {
+    return
+  }
+
+  const [options, command] = commandLine
+    .replace(melosExecRegex, '')
+    .split(' -- ')
+    .map((part) => part.trim())
+  if (options === undefined || command === undefined) {
+    return
+  }
+
+  return {
+    options: options === '' ? [] : options.split(/\s+/),
+    command,
+  }
 }
 
 function melosPackageFiltersFromYaml(
@@ -290,6 +280,9 @@ function melosPackageFiltersFromYaml(
     return typeof value === 'boolean' ? value : undefined
   }
 
+  const noPrivate = getBoolean('no-private')
+  const privateFromNoPrivate = noPrivate === undefined ? undefined : !noPrivate
+
   return {
     scope: getStringList('scope'),
     ignore: getStringList('ignore'),
@@ -298,8 +291,7 @@ function melosPackageFiltersFromYaml(
     dependsOn: getStringList('depends-on'),
     noDependsOn: getStringList('no-depends-on'),
     since: getString('since'),
-    private: getBoolean('private'),
-    noPrivate: getBoolean('no-private'),
+    private: getBoolean('private') ?? privateFromNoPrivate,
     published: getBoolean('published'),
     nullSafety: getBoolean('null-safety'),
     flutter: getBoolean('flutter'),

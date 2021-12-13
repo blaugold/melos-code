@@ -3,7 +3,6 @@ import { MelosRunScriptCommandArgs } from './commands'
 import { debug } from './logging'
 import { vscodeRangeFromNode } from './utils/yaml-utils'
 import {
-  isMelosExecScript,
   MelosWorkspaceConfig,
   parseMelosWorkspaceConfig,
 } from './workspace-config'
@@ -62,7 +61,7 @@ class MelosYamlCodeLenseProvider implements vscode.CodeLensProvider {
         })
       )
 
-      if (isMelosExecScript(script)) {
+      if (script.run?.melosExec) {
         const runInAllPackagesCommandArgs: MelosRunScriptCommandArgs = {
           ...runScriptCommandArgs,
           runInAllPackages: true,

@@ -10,7 +10,6 @@ export interface MelosPackageFilters {
   readonly noDependsOn?: readonly string[]
   readonly since?: string
   readonly private?: boolean
-  readonly noPrivate?: boolean
   readonly published?: boolean
   readonly nullSafety?: boolean
   readonly flutter?: boolean

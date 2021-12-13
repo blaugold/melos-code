@@ -7,12 +7,7 @@ import {
   buildMelosScriptTask,
 } from './script-task-provider'
 import { resolveWorkspaceFolder } from './utils/vscode-utils'
-import {
-  isMelosExecScript,
-  loadMelosWorkspaceConfig,
-  MelosScriptConfig,
-  parseMelosExecCommand,
-} from './workspace-config'
+import { loadMelosWorkspaceConfig, MelosScriptConfig } from './workspace-config'
 
 export function registerMelosCommands(context: vscode.ExtensionContext) {
   registerMelosToolCommand(context, { name: 'bootstrap' })
@@ -144,7 +139,7 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
       )
     }
 
-    if (args?.runInAllPackages || !isMelosExecScript(scriptConfig)) {
+    if (args?.runInAllPackages || !scriptConfig.run?.melosExec) {
       return runMelosScriptTask()
     }
 
@@ -191,10 +186,10 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
       packageName = selectedPackage.pkg.name
     }
 
-    const melosExecCommand = parseMelosExecCommand(scriptConfig.run!.value)
+    const melosExecCommand = scriptConfig.run?.melosExec
     if (!melosExecCommand) {
       vscode.window.showErrorMessage(
-        `Invalid melos exec command: ${scriptConfig.run!.value}`
+        `Invalid melos exec command: ${scriptConfig.run?.value}`
       )
       return
     }

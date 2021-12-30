@@ -94,7 +94,13 @@
                 "type": "object",
                 "description": "Environment variables that will be passed to the command to execute.",
                 "additionalProperties": {
-                  "type": "string",
+                  "anyOf": [
+                    { "type": "string" },
+                    { "type": "number" },
+                    { "type": "integer" },
+                    { "type": "boolean" },
+                    { "type": "null" }
+                  ],
                   "description": "The value of the environment variable."
                 }
               },

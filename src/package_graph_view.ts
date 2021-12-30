@@ -38,19 +38,19 @@ function packageGraphWebviewContent(graph: string) {
 <body>
     <div id="graph"></div>
 
-    <script type="module">
-        const graphviz = d3.select("#graph")
-            .graphviz()
-            .renderDot(\`${graph}\`);
-
-        // Make the graph fit the window.
-        const fillWindow = () => {
-            graphviz
+    <script>
+        const renderGraph = () => {
+            d3.select("#graph")
+                .graphviz()
+                .renderDot(\`${graph}\`)
+                // Make the graph fill the window.
                 .width(window.innerWidth)
                 .height(window.innerHeight);
         }
-        fillWindow()
-        window.onresize = fillWindow
+
+        renderGraph()
+
+        window.onresize = renderGraph
     </script>
 </body>
 `

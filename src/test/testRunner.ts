@@ -9,7 +9,7 @@ export function run(testsRoot: string): Promise<void> {
   const mocha = new Mocha({
     ui: 'tdd',
     color: true,
-    timeout: 10000,
+    timeout: 30000,
   })
 
   return new Promise((c, e) => {

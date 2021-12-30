@@ -27,7 +27,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "preview": true,
-  "version": "0.2.1",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.62.0"
   },

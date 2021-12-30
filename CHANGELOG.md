@@ -1,3 +1,19 @@
+# [0.3.0](https://github.com/blaugold/melos-code/compare/v0.2.1...v0.3.0) (2021-12-30)
+
+
+### Bug Fixes
+
+* allow scalar values for env args of scripts in `melos.yaml` ([#23](https://github.com/blaugold/melos-code/issues/23)) ([899a128](https://github.com/blaugold/melos-code/commit/899a12818aabc9f15b62014f683bb36423d07837))
+* fill window with package graph ([96cba55](https://github.com/blaugold/melos-code/commit/96cba5585b5bea8b4222a017d9d272edbd24daa5)), closes [#19](https://github.com/blaugold/melos-code/issues/19)
+* use `--all` flag with `melos list` ([69cd405](https://github.com/blaugold/melos-code/commit/69cd405be1e88b2f17a034650fe6f6c9cac21089)), closes [#21](https://github.com/blaugold/melos-code/issues/21)
+
+
+### Features
+
+* add editor title menu entries for `melos.yaml` ([cc43a75](https://github.com/blaugold/melos-code/commit/cc43a7562c8255dc6f150326e77972671b1228e0)), closes [#20](https://github.com/blaugold/melos-code/issues/20)
+
+
+
 ## [0.2.1](https://github.com/blaugold/melos-code/compare/v0.2.0...v0.2.1) (2021-12-13)
 
 

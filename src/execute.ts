@@ -127,7 +127,7 @@ export async function melosList(options: {
   folder: vscode.WorkspaceFolder
   filters?: MelosPackageFilters
 }): Promise<any> {
-  const args = ['list', `--${options.format}`]
+  const args = ['list', '--all', `--${options.format}`]
 
   if (options.filters) {
     args.push(...buildPackageFilterOption(options.filters))

@@ -66,6 +66,7 @@
         "command": "melos.bootstrap",
         "title": "Bootstrap",
         "category": "Melos",
+        "icon": "$(package)",
         "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
       },
       {
@@ -84,9 +85,24 @@
         "command": "melos.showPackageGraph",
         "title": "Show package graph",
         "category": "Melos",
+        "icon": "$(circuit-board)",
         "enablement": "shellExecutionSupported && workspaceFolderCount > 0"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "melos.showPackageGraph",
+          "when": "resourceFilename == melos.yaml",
+          "group": "navigation"
+        },
+        {
+          "command": "melos.bootstrap",
+          "when": "resourceFilename == melos.yaml",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "extensionDependencies": [
     "redhat.vscode-yaml",

@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/blaugold/melos-code/compare/v0.3.0...v0.4.0) (2022-03-26)
+
+
+### Bug Fixes
+
+* only run melos script in selected package ([#31](https://github.com/blaugold/melos-code/issues/31)) ([55c8636](https://github.com/blaugold/melos-code/commit/55c86362013c531032bd1c29c1373efcb679a887))
+
+
+
 # [0.3.0](https://github.com/blaugold/melos-code/compare/v0.2.1...v0.3.0) (2021-12-30)
 
 

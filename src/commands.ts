@@ -175,14 +175,17 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
           title: 'Select package to run script in',
         }
       )
+
       if (!selectedPackage) {
         // User did not select a package.
         return
       }
+
       if (!selectedPackage.pkg) {
-        // Run in all packages.
+        // User wants to run the script in all packages.
         return runMelosScriptTask()
       }
+
       packageName = selectedPackage.pkg.name
     }
 
@@ -195,17 +198,16 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
     }
 
     // Execute the script in a single package.
-    return vscode.tasks.executeTask(
-      buildMelosExecScriptTask(
-        {
-          type: 'melos',
-          script: scriptConfig!.name.value,
-          execOptions: ['--scope', packageName, ...melosExecCommand.options],
-          command: melosExecCommand.command,
-        },
-        workspaceFolder
-      )
+    const task = buildMelosExecScriptTask(
+      {
+        type: 'melos',
+        script: `${scriptConfig!.name.value} [${packageName}]`,
+        execOptions: ['--scope', packageName, ...melosExecCommand.options],
+        command: melosExecCommand.command,
+      },
+      workspaceFolder
     )
+    return vscode.tasks.executeTask(task)
   }
 }
 

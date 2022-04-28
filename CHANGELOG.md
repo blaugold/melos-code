@@ -1,3 +1,17 @@
+## [0.4.1](https://github.com/blaugold/melos-code/compare/v0.4.0...v0.4.1) (2022-04-28)
+
+
+### Bug Fixes
+
+* don't use `--all` flag when invoking `melos list` ([#33](https://github.com/blaugold/melos-code/issues/33)) ([27c92d4](https://github.com/blaugold/melos-code/commit/27c92d4a3b22dcfef2442c34ef3412d571500469))
+
+
+### Features
+
+* add new properties to `melos.yaml` schema ([#32](https://github.com/blaugold/melos-code/issues/32)) ([adf0b99](https://github.com/blaugold/melos-code/commit/adf0b993febaa672079406e0b56a8176aa5972f6))
+
+
+
 # [0.4.0](https://github.com/blaugold/melos-code/compare/v0.3.0...v0.4.0) (2022-03-26)
 
 

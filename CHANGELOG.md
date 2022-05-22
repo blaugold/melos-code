@@ -1,3 +1,12 @@
+## [0.4.2](https://github.com/blaugold/melos-code/compare/v0.4.1...v0.4.2) (2022-05-22)
+
+
+### Features
+
+* add new options to `melos.yaml` schema ([2c79fca](https://github.com/blaugold/melos-code/commit/2c79fca3838f459b29594bb9c20e16809d682dde))
+
+
+
 ## [0.4.1](https://github.com/blaugold/melos-code/compare/v0.4.0...v0.4.1) (2022-04-28)
 
 

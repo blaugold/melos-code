@@ -24,7 +24,10 @@
       "description": "Patterns for packages to exclude from the melos workspace.",
       "items": { "type": "string" }
     },
-
+    "sdkPath": {
+      "type": "string",
+      "description": "Path to the Dart/Flutter SDK that should be used."
+    },
     "ide": {
       "type": "object",
       "description": "IDE-specific configurations.\n\nThis allows connecting the different scripts to the IDE or tells melos to generate the necessary files for mono-repositories to work in the IDE.",
@@ -49,6 +52,10 @@
             "usePubspecOverrides": {
               "type": "boolean",
               "description": "Whether to use `pubspec_overrides.yaml` for overriding workspace dependencies during development."
+            },
+            "runPubGetInParallel": {
+              "type": "boolean",
+              "description": "Whether to run `pub get` in parallel during bootstrapping."
             }
           }
         },

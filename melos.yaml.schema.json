@@ -95,163 +95,185 @@
         "anyOf": [
           { "type": "string", "description": "The command to execute." },
           {
-            "type": "object",
-            "description": "The script definition.",
-            "additionalProperties": false,
-            "required": ["run"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "A unique identifier for the script."
-              },
-              "description": {
-                "type": "string",
-                "description": "A short description, shown when using `melos run` with no argument."
-              },
-              "run": {
-                "type": "string",
-                "description": "The command to execute."
-              },
-              "exec": {
+            "allOf": [
+              {
                 "anyOf": [
                   {
-                    "type": "string",
-                    "description": "The command to execute in multiple packages."
+                    "type": "object",
+                    "required": ["run"],
+                    "properties": { "run": { "type": "string" } }
                   },
                   {
                     "type": "object",
-                    "description": "The options to pass to `exec`.",
-                    "properties": {
-                      "concurrency": {
-                        "type": "number",
-                        "description": "The number of packages to execute the command in concurrently."
-                      },
-                      "failFast": {
-                        "type": "boolean",
-                        "description": "Whether exec should fail fast and not execute the script in further packages if the script fails in a individual package."
-                      }
-                    }
+                    "required": ["exec"],
+                    "properties": { "exec": { "type": "string" } }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["exec", "run"],
+                    "properties": { "exec": { "type": "object" } }
                   }
                 ]
               },
-              "env": {
+              {
                 "type": "object",
-                "description": "Environment variables that will be passed to the command to execute.",
-                "additionalProperties": {
-                  "anyOf": [
-                    { "type": "string" },
-                    { "type": "number" },
-                    { "type": "integer" },
-                    { "type": "boolean" },
-                    { "type": "null" }
-                  ],
-                  "description": "The value of the environment variable."
-                }
-              },
-              "select-package": {
-                "type": "object",
-                "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
+                "description": "The script definition.",
                 "additionalProperties": false,
                 "properties": {
-                  "scope": {
-                    "description": "Patterns for including packages by name.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "ignore": {
-                    "description": "Patterns for excluding packages by name.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "dir-exists": {
-                    "description": "Include a package only if a given directory exists.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "file-exists": {
-                    "description": "Include a package only if a given file exists.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "depends-on": {
-                    "description": "Include only packages that depend on a specific package.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "no-depends-on": {
-                    "description": "Include only packages that do not depend on a specific package.",
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    ]
-                  },
-                  "since": {
+                  "name": {
                     "type": "string",
-                    "description": "Filter package based on whether they received changed since a specific git commit/tag ID."
+                    "description": "A unique identifier for the script."
                   },
-                  "private": {
-                    "type": "boolean",
-                    "description": "Include packages with `publish_to: none`."
+                  "description": {
+                    "type": "string",
+                    "description": "A short description, shown when using `melos run` with no argument."
                   },
-                  "no-private": {
-                    "type": "boolean",
-                    "description": "Exclude packages with `publish_to: none`."
+                  "run": {
+                    "type": "string",
+                    "description": "The command to execute."
                   },
-                  "published": {
-                    "type": "boolean",
-                    "description": "Include/Exclude packages that are up-to-date on pub.dev."
+                  "exec": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "description": "The command to execute in multiple packages."
+                      },
+                      {
+                        "type": "object",
+                        "description": "The options to pass to `exec`.",
+                        "properties": {
+                          "concurrency": {
+                            "type": "number",
+                            "description": "The number of packages to execute the command in concurrently."
+                          },
+                          "failFast": {
+                            "type": "boolean",
+                            "description": "Whether exec should fail fast and not execute the script in further packages if the script fails in a individual package."
+                          }
+                        }
+                      }
+                    ]
                   },
-                  "null-safety": {
-                    "type": "boolean",
-                    "description": "Include/Exclude packages that are null-safe."
+                  "env": {
+                    "type": "object",
+                    "description": "Environment variables that will be passed to the command to execute.",
+                    "additionalProperties": {
+                      "anyOf": [
+                        { "type": "string" },
+                        { "type": "number" },
+                        { "type": "integer" },
+                        { "type": "boolean" },
+                        { "type": "null" }
+                      ],
+                      "description": "The value of the environment variable."
+                    }
                   },
-                  "flutter": {
-                    "type": "boolean",
-                    "description": "Include/Exclude packages that are Flutter packages."
+                  "select-package": {
+                    "type": "object",
+                    "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
+                    "additionalProperties": false,
+                    "properties": {
+                      "scope": {
+                        "description": "Patterns for including packages by name.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "ignore": {
+                        "description": "Patterns for excluding packages by name.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "dir-exists": {
+                        "description": "Include a package only if a given directory exists.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "file-exists": {
+                        "description": "Include a package only if a given file exists.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "depends-on": {
+                        "description": "Include only packages that depend on a specific package.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "no-depends-on": {
+                        "description": "Include only packages that do not depend on a specific package.",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        ]
+                      },
+                      "since": {
+                        "type": "string",
+                        "description": "Filter package based on whether they received changed since a specific git commit/tag ID."
+                      },
+                      "private": {
+                        "type": "boolean",
+                        "description": "Include packages with `publish_to: none`."
+                      },
+                      "no-private": {
+                        "type": "boolean",
+                        "description": "Exclude packages with `publish_to: none`."
+                      },
+                      "published": {
+                        "type": "boolean",
+                        "description": "Include/Exclude packages that are up-to-date on pub.dev."
+                      },
+                      "null-safety": {
+                        "type": "boolean",
+                        "description": "Include/Exclude packages that are null-safe."
+                      },
+                      "flutter": {
+                        "type": "boolean",
+                        "description": "Include/Exclude packages that are Flutter packages."
+                      }
+                    }
                   }
                 }
               }
-            }
+            ]
           }
         ]
       }

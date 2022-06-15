@@ -1,3 +1,12 @@
+## [0.4.3](https://github.com/blaugold/melos-code/compare/v0.4.2...v0.4.3) (2022-06-15)
+
+
+### Features
+
+* add support for `exec` in scripts ([#34](https://github.com/blaugold/melos-code/issues/34)) ([5cf9b1b](https://github.com/blaugold/melos-code/commit/5cf9b1b1a861a0abffa920dd3f4806495d7d92a0))
+
+
+
 ## [0.4.2](https://github.com/blaugold/melos-code/compare/v0.4.1...v0.4.2) (2022-05-22)
 
 

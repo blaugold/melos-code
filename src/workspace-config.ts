@@ -35,12 +35,10 @@ export interface MelosScriptConfig {
    * The name of the script.
    */
   readonly name: MelosScriptName
-
   /**
    * The command to run for the script.
    */
   readonly run?: MelosScriptCommand
-
   /**
    * The package filters to apply for the script.
    */
@@ -70,10 +68,9 @@ export interface MelosScriptCommand {
    */
   readonly value: string
   /**
-   * The YAML node that contains the name.
+   * The YAML node that contains the command.
    */
   readonly yamlNode: Node
-
   /**
    * If the command is a `melos exec` command, the parsed representation of it.
    */
@@ -194,7 +191,10 @@ function melosScriptsConfigsFromYaml(value: any): MelosScriptConfig[] {
       if (definition instanceof YAMLMap) {
         return {
           name: scriptName,
-          run: melosScriptCommandFromYaml(definition.get('run', true)),
+          run: melosScriptCommandFromYaml(
+            definition.get('run', true),
+            definition.get('exec', true)
+          ),
           packageSelect: melosPackageFiltersFromYaml(
             definition.get('select-package', true)
           ),
@@ -206,13 +206,56 @@ function melosScriptsConfigsFromYaml(value: any): MelosScriptConfig[] {
 }
 
 function melosScriptCommandFromYaml(
-  value: any
+  run: any,
+  exec?: any
 ): MelosScriptCommand | undefined {
-  if (value instanceof Scalar && typeof value.value === 'string') {
+  if (exec) {
+    if (exec instanceof Scalar) {
+      if (typeof exec.value === 'string') {
+        return {
+          value: exec.value,
+          yamlNode: exec,
+          melosExec: {
+            command: exec.value,
+            options: [],
+          },
+        }
+      } else {
+        return
+      }
+    } else if (exec instanceof YAMLMap) {
+      if (run instanceof Scalar && typeof run.value === 'string') {
+        const options: string[] = []
+
+        const concurrency = exec.get('concurrency')
+        if (typeof concurrency === 'number') {
+          options.push(`--concurrency=${concurrency}`)
+        }
+
+        const failFast = exec.get('failFast')
+        if (typeof failFast === 'boolean' && failFast) {
+          options.push('--fail-fast')
+        }
+
+        return {
+          value: run.value,
+          yamlNode: run,
+          melosExec: {
+            command: run.value,
+            options: options,
+          },
+        }
+      }
+    } else {
+      return
+    }
+  }
+
+  if (run instanceof Scalar && typeof run.value === 'string') {
     return {
-      value: value.value,
-      yamlNode: value,
-      melosExec: parseMelosExecCommand(value.value),
+      value: run.value,
+      yamlNode: run,
+      melosExec: parseMelosExecCommand(run.value),
     }
   }
 

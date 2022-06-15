@@ -112,6 +112,28 @@
                 "type": "string",
                 "description": "The command to execute."
               },
+              "exec": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "The command to execute in multiple packages."
+                  },
+                  {
+                    "type": "object",
+                    "description": "The options to pass to `exec`.",
+                    "properties": {
+                      "concurrency": {
+                        "type": "number",
+                        "description": "The number of packages to execute the command in concurrently."
+                      },
+                      "failFast": {
+                        "type": "boolean",
+                        "description": "Whether exec should fail fast and not execute the script in further packages if the script fails in a individual package."
+                      }
+                    }
+                  }
+                ]
+              },
               "env": {
                 "type": "object",
                 "description": "Environment variables that will be passed to the command to execute.",

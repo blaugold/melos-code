@@ -84,6 +84,33 @@ scripts:
         options: ['--c', '1'],
         command: 'a',
       })
+
+      config = parseMelosWorkspaceConfig(
+        `scripts:
+    a:
+      exec: b
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].run?.melosExec, {
+        options: [],
+        command: 'b',
+      })
+
+      config = parseMelosWorkspaceConfig(
+        `scripts:
+    a:
+      run: b
+      exec:
+        concurrency: 42
+        failFast: true
+`
+      )
+
+      assert.deepStrictEqual(config.scripts[0].run?.melosExec, {
+        options: ['--concurrency=42', '--fail-fast'],
+        command: 'b',
+      })
     })
 
     test('parse select-package section of scripts', () => {

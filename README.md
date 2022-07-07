@@ -1,6 +1,7 @@
 This extension adds support for using [Melos] with Visual Studio Code.
 
 ## Installation
+
 Melos Code can be [installed from the Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=blaugold.melos-code) or by [searching within VS Code](https://code.visualstudio.com/docs/editor/extension-gallery#_search-for-an-extension).
 
 ## Features

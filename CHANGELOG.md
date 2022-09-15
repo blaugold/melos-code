@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/blaugold/melos-code/compare/v0.4.3...v0.5.0) (2022-09-15)
+
+
+### Features
+
+* add `moduleNamePrefix` to `melos.yaml` schema ([87f88e8](https://github.com/blaugold/melos-code/commit/87f88e847c23062d3c202939f5ef37f0a886c04f))
+* don't touch `dart.runPubGetOnPubspecChanges` when `usePubspecOverrides` is enabled ([#38](https://github.com/blaugold/melos-code/issues/38)) ([da73508](https://github.com/blaugold/melos-code/commit/da735081480790634a8997fe865670a94badf831)), closes [#36](https://github.com/blaugold/melos-code/issues/36) [#37](https://github.com/blaugold/melos-code/issues/37)
+
+
+
 ## [0.4.3](https://github.com/blaugold/melos-code/compare/v0.4.2...v0.4.3) (2022-06-15)
 
 

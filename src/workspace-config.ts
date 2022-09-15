@@ -21,10 +21,36 @@ export interface MelosWorkspaceConfig {
    * The YAML document from which the configuration was parsed.
    */
   readonly yamlDoc: Document
+
+  /**
+   * Configuration for Melos commands.
+   */
+  readonly command?: MelosCommandsConfig
+
   /**
    * The configured Melos scripts.
    */
   readonly scripts: readonly MelosScriptConfig[]
+}
+
+/**
+ * Configuration for Melos commands.
+ */
+export interface MelosCommandsConfig {
+  /**
+   * Configuration for the `melos bootstrap` command.
+   */
+  readonly bootstrap: MelosBootstrapConfig
+}
+
+/**
+ * Configuration for the `melos bootstrap` command.
+ */
+export interface MelosBootstrapConfig {
+  /**
+   * Whether Melos should use `pubspec_overrides.yaml` files to override dependencies.
+   */
+  readonly usePubspecOverrides?: boolean
 }
 
 /**
@@ -158,6 +184,7 @@ function showInvalidMelosYamlMessage(folder: vscode.WorkspaceFolder) {
 function melosWorkspaceConfigFromYamlDoc(doc: Document): MelosWorkspaceConfig {
   return {
     yamlDoc: doc,
+    command: doc.toJSON()['command'],
     scripts: melosScriptsConfigsFromYaml(doc.get('scripts')),
   }
 }

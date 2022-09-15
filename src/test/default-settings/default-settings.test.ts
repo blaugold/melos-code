@@ -14,7 +14,7 @@ suite('Default settings', () => {
     await openMelosYamlInEditor()
 
     const melosWorkspaceDefaultSettings = {
-      'dart.runPubGetOnPubspecChanges': false,
+      'dart.runPubGetOnPubspecChanges': 'never',
     }
 
     // Check that all default settings have the correct values.

@@ -102,6 +102,10 @@
             "updateGitTagRefs": {
               "type": "boolean",
               "description": "Whether to also update pubspec with git referenced packages."
+            },
+            "releaseUrl": {
+              "type": "boolean",
+              "description": "Whether to generate and print a link to the prefilled release creation page for each package after versioning.\n\nDisabled by default."
             }
           }
         }

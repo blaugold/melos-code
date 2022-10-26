@@ -44,6 +44,10 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether IntelliJ support is enabled."
+                },
                 "moduleNamePrefix": {
                   "type": "string",
                   "description": "Used when generating IntelliJ project modules files, this value specifies a string to prepend to a package's IntelliJ module name.\n\nThe default is 'melos_'."
@@ -98,6 +102,10 @@
             "updateGitTagRefs": {
               "type": "boolean",
               "description": "Whether to also update pubspec with git referenced packages."
+            },
+            "releaseUrl": {
+              "type": "boolean",
+              "description": "Whether to generate and print a link to the prefilled release creation page for each package after versioning.\n\nDisabled by default."
             }
           }
         }

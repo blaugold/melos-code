@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/blaugold/melos-code/compare/v0.5.0...v0.6.0) (2022-10-26)
+
+
+### Features
+
+* add `ide.intellij.enabled` and `command.version.releaseUrl` to `melos.yaml` schema ([#39](https://github.com/blaugold/melos-code/issues/39)) ([69c29db](https://github.com/blaugold/melos-code/commit/69c29dba658b2889e421c9de829376c3ad2b7a0b))
+
+
+
 # [0.5.0](https://github.com/blaugold/melos-code/compare/v0.4.3...v0.5.0) (2022-09-15)
 
 

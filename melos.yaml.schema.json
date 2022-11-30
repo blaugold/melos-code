@@ -11,8 +11,37 @@
       "description": "The name of the Melos workspace – used by IDE documentation."
     },
     "repository": {
-      "type": "string",
-      "description": "The hosted git repository which contains the workspace."
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "The hosted git repository which contains the workspace."
+        },
+        {
+          "type": "object",
+          "description": "The self-hosted git repository which contains the workspace.",
+          "additionalProperties": false,
+          "required": ["type", "origin", "owner", "name"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of repository",
+              "enum": ["github", "gitlab"]
+            },
+            "origin": {
+              "type": "string",
+              "description": "The origin of the repository, e.g. https://git.example.dev/gitlab"
+            },
+            "owner": {
+              "type": "string",
+              "description": "The owner of the repository"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the repository"
+            }
+          }
+        }
+      ]
     },
     "packages": {
       "type": "array",

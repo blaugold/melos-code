@@ -54,7 +54,6 @@ async function main() {
 
   try {
     await runTests('suite')
-    await runTests('default-settings')
   } catch (err) {
     console.error(err)
     exitCode = 1

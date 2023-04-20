@@ -8,7 +8,7 @@ export interface MelosPackageFilters {
   readonly fileExists?: readonly string[]
   readonly dependsOn?: readonly string[]
   readonly noDependsOn?: readonly string[]
-  readonly since?: string
+  readonly diff?: string
   readonly private?: boolean
   readonly published?: boolean
   readonly nullSafety?: boolean

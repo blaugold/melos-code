@@ -147,7 +147,7 @@ function runScriptCommandHandler(context: vscode.ExtensionContext) {
     const packages = await melosList({
       format: MelosListFormat.json,
       folder: workspaceFolder,
-      filters: scriptConfig.packageSelect,
+      filters: scriptConfig.packageFilters,
     })
 
     if (packages.length === 0) {

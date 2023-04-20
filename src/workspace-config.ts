@@ -68,7 +68,7 @@ export interface MelosScriptConfig {
   /**
    * The package filters to apply for the script.
    */
-  readonly packageSelect?: MelosPackageFilters
+  readonly packageFilters?: MelosPackageFilters
 }
 
 /**
@@ -222,8 +222,8 @@ function melosScriptsConfigsFromYaml(value: any): MelosScriptConfig[] {
             definition.get('run', true),
             definition.get('exec', true)
           ),
-          packageSelect: melosPackageFiltersFromYaml(
-            definition.get('select-package', true)
+          packageFilters: melosPackageFiltersFromYaml(
+            definition.get('packageFilters', true)
           ),
         }
       }
@@ -350,20 +350,20 @@ function melosPackageFiltersFromYaml(
     return typeof value === 'boolean' ? value : undefined
   }
 
-  const noPrivate = getBoolean('no-private')
+  const noPrivate = getBoolean('noPrivate')
   const privateFromNoPrivate = noPrivate === undefined ? undefined : !noPrivate
 
   return {
     scope: getStringList('scope'),
     ignore: getStringList('ignore'),
-    dirExists: getStringList('dir-exists'),
-    fileExists: getStringList('file-exists'),
-    dependsOn: getStringList('depends-on'),
-    noDependsOn: getStringList('no-depends-on'),
-    since: getString('since'),
+    dirExists: getStringList('dirExists'),
+    fileExists: getStringList('fileExists'),
+    dependsOn: getStringList('dependsOn'),
+    noDependsOn: getStringList('noDependsOn'),
+    diff: getString('diff'),
     private: getBoolean('private') ?? privateFromNoPrivate,
     published: getBoolean('published'),
-    nullSafety: getBoolean('null-safety'),
+    nullSafety: getBoolean('nullSafety'),
     flutter: getBoolean('flutter'),
   }
 }

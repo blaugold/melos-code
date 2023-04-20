@@ -1,6 +1,4 @@
 .vscode-test/
-src/test/workspaces/default-settings/**
-!src/test/workspaces/default-settings/.gitkeep
 node_modules
 out
 *.vsix

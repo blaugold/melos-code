@@ -48,7 +48,7 @@ jobs:
       # This ensures that the local installation of Melos has been resolved before
       # running the tests.
       - name: Prepare test workspace
-        working-directory: src/workspaces/suite
+        working-directory: src/test/workspaces/suite
         run: melos
 
       - name: Run tests

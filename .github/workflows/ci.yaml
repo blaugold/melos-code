@@ -45,5 +45,11 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99.0" >>$GITHUB_ENV
 
+      # This ensures that the local installation of Melos has been resolved before
+      # running the tests.
+      - name: Prepare test workspace
+        working-directory: src/workspaces/suite
+        run: melos
+
       - name: Run tests
         run: npm test

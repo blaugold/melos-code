@@ -1,3 +1,13 @@
+# [1.0.0](https://github.com/blaugold/melos-code/compare/v0.6.0...v1.0.0) (2023-04-20)
+
+
+### Features
+
+* support Melos 3 ([#46](https://github.com/blaugold/melos-code/issues/46))
+* add self-hosted repositories to `melos.yaml` schema ([#40](https://github.com/blaugold/melos-code/issues/40)) ([b321207](https://github.com/blaugold/melos-code/commit/b32120729b69ca7e601dda32f0a5d46bb5dbc58c))
+
+
+
 # [0.6.0](https://github.com/blaugold/melos-code/compare/v0.5.0...v0.6.0) (2022-10-26)
 
 

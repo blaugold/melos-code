@@ -113,34 +113,34 @@ scripts:
       })
     })
 
-    test('parse select-package section of scripts', () => {
+    test('parse packageFilters section of scripts', () => {
       let config = parseMelosWorkspaceConfig(
         `scripts:
     a:
         run: b
-        select-package:
+        packageFilters:
             scope: a
             ignore: b
-            file-exists: c
-            dir-exists: d
-            depends-on: e
-            no-depends-on: f
-            since: g
+            fileExists: c
+            dirExists: d
+            dependsOn: e
+            noDependsOn: f
+            diff: g
             private: true
             published: true
-            null-safety: true
+            nullSafety: true
             flutter: true
 `
       )
 
-      assert.deepStrictEqual(config.scripts[0].packageSelect, {
+      assert.deepStrictEqual(config.scripts[0].packageFilters, {
         scope: ['a'],
         ignore: ['b'],
         fileExists: ['c'],
         dirExists: ['d'],
         dependsOn: ['e'],
         noDependsOn: ['f'],
-        since: 'g',
+        diff: 'g',
         private: true,
         published: true,
         nullSafety: true,
@@ -151,30 +151,30 @@ scripts:
         `scripts:
     a:
         run: b
-        select-package:
+        packageFilters:
             scope:
                 - a
             ignore:
                 - b
-            file-exists:
+            fileExists:
                 - c
-            dir-exists:
+            dirExists:
                 - d
-            depends-on:
+            dependsOn:
                 - e
-            no-depends-on:
+            noDependsOn:
                 - f
 `
       )
 
-      assert.deepStrictEqual(config.scripts[0].packageSelect, {
+      assert.deepStrictEqual(config.scripts[0].packageFilters, {
         scope: ['a'],
         ignore: ['b'],
         fileExists: ['c'],
         dirExists: ['d'],
         dependsOn: ['e'],
         noDependsOn: ['f'],
-        since: undefined,
+        diff: undefined,
         private: undefined,
         published: undefined,
         nullSafety: undefined,

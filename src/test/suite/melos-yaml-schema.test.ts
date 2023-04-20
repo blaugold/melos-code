@@ -132,33 +132,33 @@ scripts:
       run: a
       env:
           a: a
-      select-package:
+      packageFilters:
           scope: a
           ignore: a
-          dir-exists: a
-          file-exists: a
-          depends-on: a
-          no-depends-on: a
-          since: a
+          dirExists: a
+          fileExists: a
+          dependsOn: a
+          noDependsOn: a
+          diff: a
           private: true
-          no-private: false
+          noPrivate: false
           published: true
-          null-safety: true
+          nullSafety: true
           flutter: true
   b:
       run: a
-      select-package:
+      packageFilters:
           scope:
               - a
           ignore:
               - a
-          dir-exists:
+          dirExists:
               - a
-          file-exists:
+          fileExists:
               - a
-          depends-on:
+          dependsOn:
               - a
-          no-depends-on:
+          noDependsOn:
               - a
 `)
   })
@@ -178,7 +178,7 @@ scripts:
     )
   })
 
-  test('reject additional props in script select-package config', () => {
+  test('reject additional props in script packageFilters config', () => {
     assertInvalidMelosYaml(
       `
 name: a
@@ -187,11 +187,11 @@ packages:
 scripts:
     a:
         run: a
-        select-package:
+        packageFilters:
             a: a
 `,
       {
-        instancePath: '/scripts/a/select-package',
+        instancePath: '/scripts/a/packageFilters',
         keyword: 'additionalProperties',
       }
     )

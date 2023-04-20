@@ -33,21 +33,6 @@
       },
       "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
       "preLaunchTask": "npm: pretest"
-    },
-    {
-      "name": "Extension Tests (default-settings)",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/out/test/default-settings",
-        "${workspaceFolder}/src/test/workspaces/default-settings"
-      ],
-      "env": {
-        "MELOS_CODE_CONSOLE_LOG_LEVEL": "debug"
-      },
-      "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
-      "preLaunchTask": "npm: pretest"
     }
   ]
 }

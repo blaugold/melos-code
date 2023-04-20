@@ -4,7 +4,6 @@ import { registerMelosCommands } from './commands'
 import { info, initLogging } from './logging'
 import { initMelosWorkspaces } from './melos-workspace'
 import { registerMelosScriptTaskProvider } from './script-task-provider'
-import { registerDefaultMelosWorkspaceSettings } from './settings'
 
 export async function activate(context: vscode.ExtensionContext) {
   initLogging(context)
@@ -15,7 +14,6 @@ export async function activate(context: vscode.ExtensionContext) {
   // other components.
   await initMelosWorkspaces(context)
 
-  await registerDefaultMelosWorkspaceSettings(context)
   registerMelosScriptTaskProvider(context)
   registerMelosCommands(context)
   registerMelosYamlCodeLenseProvider(context)

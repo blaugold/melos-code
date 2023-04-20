@@ -8,7 +8,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "The name of the Melos workspace – used by IDE documentation."
+      "description": "The name of the Melos workspace - used by IDE documentation."
     },
     "repository": {
       "anyOf": [
@@ -97,13 +97,13 @@
           "description": "The bootstrap command configuration.",
           "additionalProperties": false,
           "properties": {
-            "usePubspecOverrides": {
-              "type": "boolean",
-              "description": "Whether to use `pubspec_overrides.yaml` for overriding workspace dependencies during development."
-            },
             "runPubGetInParallel": {
               "type": "boolean",
               "description": "Whether to run `pub get` in parallel during bootstrapping."
+            },
+            "hooks": {
+              "description": "Hooks to run at certain points of the command lifecycle.",
+              "allOf": [{ "$ref": "#/$defs/commonHooks" }]
             }
           }
         },
@@ -115,6 +115,10 @@
             "message": {
               "type": "string",
               "description": "A custom header for the generated CHANGELOG.md."
+            },
+            "includeScopes": {
+              "type": "string",
+              "description": "Whether to include conventional commit scopes in the generated CHANGELOG.md."
             },
             "linkToCommits": {
               "type": "boolean",
@@ -135,6 +139,18 @@
             "releaseUrl": {
               "type": "boolean",
               "description": "Whether to generate and print a link to the prefilled release creation page for each package after versioning.\n\nDisabled by default."
+            },
+            "hooks": {
+              "description": "Hooks to run at certain points of the command lifecycle.",
+              "allOf": [
+                { "$id": "#/$defs/commonHooks" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "preCommit": { "$ref": "#/$defs/script" }
+                  }
+                }
+              ]
             }
           }
         }
@@ -143,191 +159,201 @@
     "scripts": {
       "type": "object",
       "description": "A list of scripts that can be executed with `melos run` or will be executed before/after some specific melos commands.",
-      "additionalProperties": {
-        "anyOf": [
-          { "type": "string", "description": "The command to execute." },
-          {
-            "allOf": [
-              {
-                "anyOf": [
-                  {
-                    "type": "object",
-                    "required": ["run"],
-                    "properties": { "run": { "type": "string" } }
-                  },
-                  {
-                    "type": "object",
-                    "required": ["exec"],
-                    "properties": { "exec": { "type": "string" } }
-                  },
-                  {
-                    "type": "object",
-                    "required": ["exec", "run"],
-                    "properties": { "exec": { "type": "object" } }
-                  }
-                ]
-              },
-              {
-                "type": "object",
-                "description": "The script definition.",
-                "additionalProperties": false,
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "A unique identifier for the script."
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A short description, shown when using `melos run` with no argument."
-                  },
-                  "run": {
-                    "type": "string",
-                    "description": "The command to execute."
-                  },
-                  "exec": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "description": "The command to execute in multiple packages."
-                      },
-                      {
-                        "type": "object",
-                        "description": "The options to pass to `exec`.",
-                        "properties": {
-                          "concurrency": {
-                            "type": "number",
-                            "description": "The number of packages to execute the command in concurrently."
-                          },
-                          "failFast": {
-                            "type": "boolean",
-                            "description": "Whether exec should fail fast and not execute the script in further packages if the script fails in a individual package."
-                          }
+      "additionalProperties": { "$ref": "#/$defs/script" }
+    }
+  },
+  "$defs": {
+    "script": {
+      "anyOf": [
+        { "type": "string", "description": "The command to execute." },
+        {
+          "allOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": ["run"],
+                  "properties": { "run": { "type": "string" } }
+                },
+                {
+                  "type": "object",
+                  "required": ["exec"],
+                  "properties": { "exec": { "type": "string" } }
+                },
+                {
+                  "type": "object",
+                  "required": ["exec", "run"],
+                  "properties": { "exec": { "type": "object" } }
+                }
+              ]
+            },
+            {
+              "type": "object",
+              "description": "The script definition.",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "A unique identifier for the script."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A short description, shown when using `melos run` with no argument."
+                },
+                "run": {
+                  "type": "string",
+                  "description": "The command to execute."
+                },
+                "exec": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "The command to execute in multiple packages."
+                    },
+                    {
+                      "type": "object",
+                      "description": "The options to pass to `exec`.",
+                      "properties": {
+                        "concurrency": {
+                          "type": "number",
+                          "description": "The number of packages to execute the command in concurrently."
+                        },
+                        "failFast": {
+                          "type": "boolean",
+                          "description": "Whether exec should fail fast and not execute the script in further packages if the script fails in a individual package."
                         }
                       }
-                    ]
-                  },
-                  "env": {
-                    "type": "object",
-                    "description": "Environment variables that will be passed to the command to execute.",
-                    "additionalProperties": {
-                      "anyOf": [
-                        { "type": "string" },
-                        { "type": "number" },
-                        { "type": "integer" },
-                        { "type": "boolean" },
-                        { "type": "null" }
-                      ],
-                      "description": "The value of the environment variable."
                     }
-                  },
-                  "select-package": {
-                    "type": "object",
-                    "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
-                    "additionalProperties": false,
-                    "properties": {
-                      "scope": {
-                        "description": "Patterns for including packages by name.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "ignore": {
-                        "description": "Patterns for excluding packages by name.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "dir-exists": {
-                        "description": "Include a package only if a given directory exists.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "file-exists": {
-                        "description": "Include a package only if a given file exists.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "depends-on": {
-                        "description": "Include only packages that depend on a specific package.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "no-depends-on": {
-                        "description": "Include only packages that do not depend on a specific package.",
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "array",
-                            "items": { "type": "string" }
-                          }
-                        ]
-                      },
-                      "since": {
-                        "type": "string",
-                        "description": "Filter package based on whether they received changed since a specific git commit/tag ID."
-                      },
-                      "private": {
-                        "type": "boolean",
-                        "description": "Include packages with `publish_to: none`."
-                      },
-                      "no-private": {
-                        "type": "boolean",
-                        "description": "Exclude packages with `publish_to: none`."
-                      },
-                      "published": {
-                        "type": "boolean",
-                        "description": "Include/Exclude packages that are up-to-date on pub.dev."
-                      },
-                      "null-safety": {
-                        "type": "boolean",
-                        "description": "Include/Exclude packages that are null-safe."
-                      },
-                      "flutter": {
-                        "type": "boolean",
-                        "description": "Include/Exclude packages that are Flutter packages."
-                      }
+                  ]
+                },
+                "env": {
+                  "type": "object",
+                  "description": "Environment variables that will be passed to the command to execute.",
+                  "additionalProperties": {
+                    "anyOf": [
+                      { "type": "string" },
+                      { "type": "number" },
+                      { "type": "integer" },
+                      { "type": "boolean" },
+                      { "type": "null" }
+                    ],
+                    "description": "The value of the environment variable."
+                  }
+                },
+                "packageFilters": {
+                  "type": "object",
+                  "description": "If the command to execute is a melos command, allows filtering packages that will execute the command.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "scope": {
+                      "description": "Patterns for including packages by name.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "ignore": {
+                      "description": "Patterns for excluding packages by name.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "dirExists": {
+                      "description": "Include a package only if a given directory exists.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "fileExists": {
+                      "description": "Include a package only if a given file exists.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "dependsOn": {
+                      "description": "Include only packages that depend on a specific package.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "noDependsOn": {
+                      "description": "Include only packages that do not depend on a specific package.",
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      ]
+                    },
+                    "diff": {
+                      "type": "string",
+                      "description": "Filter packages based on whether there were changes between a commit and the current HEAD or within a range of commits. A range of commits can be specified using the git short hand syntax `<start-commit>..<end-commit>` and `<start-commit>...<end-commit>."
+                    },
+                    "private": {
+                      "type": "boolean",
+                      "description": "Include packages with `publish_to: none`."
+                    },
+                    "noPrivate": {
+                      "type": "boolean",
+                      "description": "Exclude packages with `publish_to: none`."
+                    },
+                    "published": {
+                      "type": "boolean",
+                      "description": "Include/Exclude packages that are up-to-date on pub.dev."
+                    },
+                    "nullSafety": {
+                      "type": "boolean",
+                      "description": "Include/Exclude packages that are null-safe."
+                    },
+                    "flutter": {
+                      "type": "boolean",
+                      "description": "Include/Exclude packages that are Flutter packages."
                     }
                   }
                 }
               }
-            ]
-          }
-        ]
+            }
+          ]
+        }
+      ]
+    },
+    "commonHooks": {
+      "type": "object",
+      "properties": {
+        "pre": { "$ref": "#/$defs/script" },
+        "post": { "$ref": "#/$defs/script" }
       }
     }
   }

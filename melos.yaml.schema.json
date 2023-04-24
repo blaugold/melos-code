@@ -153,6 +153,17 @@
               ]
             }
           }
+        },
+        "clean": {
+          "type": "object",
+          "description": "The clean command configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "hooks": {
+              "description": "Hooks to run at certain points of the command lifecycle.",
+              "allOf": [{ "$ref": "#/$defs/commonHooks" }]
+            }
+          }
         }
       }
     },

@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/blaugold/melos-code/compare/v1.0.0...v1.0.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* add `clean` hooks to `melos.yaml` schema ([#47](https://github.com/blaugold/melos-code/issues/47)) ([7041836](https://github.com/blaugold/melos-code/commit/70418363ab3db6b96f73687516b1c65ebe74d10a))
+
+
+
 # [1.0.0](https://github.com/blaugold/melos-code/compare/v0.6.0...v1.0.0) (2023-04-20)
 
 

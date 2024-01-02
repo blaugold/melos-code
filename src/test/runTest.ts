@@ -40,14 +40,16 @@ async function main() {
   const vscodeExecutablePath = await vscode.downloadAndUnzipVSCode(
     vscodeVersion
   )
-  const cliPath =
-    vscode.resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath)
+
+  const [cli, ...args] =
+    vscode.resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath)
 
   // Ensure that the redhat.vscode-yaml extension is installed.
   // This is a dependency of this extension and provides the language
   // definition for yaml, which is needed to activate this extension.
   for (const extension of extensionDependencies) {
-    cp.execSync(`"${cliPath}" --force --install-extension=${extension}`, {
+    cp.spawnSync(cli, [...args, '--install-extension', extension], {
+      encoding: 'utf-8',
       stdio: 'inherit',
     })
   }

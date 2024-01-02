@@ -131,7 +131,7 @@
     "@types/vscode": "^1.62.0",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
-    "@vscode/test-electron": "^1.6.2",
+    "@vscode/test-electron": "^2.3.8",
     "conventional-changelog-cli": "^2.1.1",
     "esbuild": "^0.14.1",
     "eslint": "^8.1.0",

@@ -151,6 +151,10 @@
               "type": "boolean",
               "description": "Whether to generate and print a link to the prefilled release creation page for each package after versioning.\n\nDisabled by default."
             },
+            "fetchTags": {
+              "type": "boolean",
+              "description": "Whether to fetch tags from the origin remote before versioning.\n\nDefaults to true."
+            },
             "hooks": {
               "description": "Hooks to run at certain points of the command lifecycle.",
               "allOf": [

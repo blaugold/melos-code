@@ -115,6 +115,10 @@
               "items": {
                 "type": "string"
               }
+            },
+            "dependencyOverrides": {
+              "type": "object",
+              "description": "Dependencies that should be added to each workspace package's dependency overrides."
             }
           }
         },

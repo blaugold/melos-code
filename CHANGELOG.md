@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/blaugold/melos-code/compare/v1.1.0...v1.1.1) (2024-01-02)
+
+
+### Bug Fixes
+
+* spelling of `dev_dependencies` in melos.yaml schema ([6d11dcd](https://github.com/blaugold/melos-code/commit/6d11dcdd0f941f35107e9b2b10cd7a2a251d829f))
+
+
+
 # [1.1.0](https://github.com/blaugold/melos-code/compare/v1.0.1...v1.1.0) (2024-01-02)
 
 

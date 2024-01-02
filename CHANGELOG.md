@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/blaugold/melos-code/compare/v1.0.1...v1.1.0) (2024-01-02)
+
+
+### Features
+
+* add `dependencyOverrides` to melos.yaml schema ([#48](https://github.com/blaugold/melos-code/issues/48)) ([0048471](https://github.com/blaugold/melos-code/commit/0048471e7d032201668ce70be8d41d99554e9b3e))
+* add `enforceLockfile`, `environment`, `dependencies` and `devDependencies` to melos.yaml schema ([#53](https://github.com/blaugold/melos-code/issues/53)) ([ee441bd](https://github.com/blaugold/melos-code/commit/ee441bdade37129d2b4a38dee4093c72d668d67d))
+* add `fetchTags` to `melos.yaml` schema ([#49](https://github.com/blaugold/melos-code/issues/49)) ([d0efb28](https://github.com/blaugold/melos-code/commit/d0efb289548a0c27121cfbdae56998649bb43c6f))
+* add `runPubGetOffline` and `runPubGetOffline` to melos.yaml schema ([#51](https://github.com/blaugold/melos-code/issues/51)) ([c5fc37f](https://github.com/blaugold/melos-code/commit/c5fc37f9469c66d59c4edb2fa4ced68531c4b058))
+
+
+
 ## [1.0.1](https://github.com/blaugold/melos-code/compare/v1.0.0...v1.0.1) (2023-04-24)
 
 

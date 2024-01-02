@@ -132,7 +132,7 @@
               "type": "object",
               "description": "Dependencies to be synced between all packages."
             },
-            "devDependencies": {
+            "dev_dependencies": {
               "type": "object",
               "description": "Dev dependencies to be synced between all packages."
             }

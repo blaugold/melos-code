@@ -40,6 +40,7 @@ async function main() {
   const vscodeExecutablePath = await vscode.downloadAndUnzipVSCode(
     vscodeVersion
   )
+
   const [cli, ...args] =
     vscode.resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath)
 

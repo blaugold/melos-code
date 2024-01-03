@@ -48,6 +48,16 @@ function isMelosScriptTaskDefinition(
   return definition.type === 'melos' && typeof definition.script === 'string'
 }
 
+function isMelosExecScriptTaskDefinition(
+  definition: vscode.TaskDefinition
+): definition is MelosExecScriptTaskDefinition {
+  return (
+    isMelosScriptTaskDefinition(definition) &&
+    typeof definition.command === 'string' &&
+    Array.isArray(definition.execOptions)
+  )
+}
+
 class MelosScriptTaskProvider implements vscode.TaskProvider {
   constructor(private context: vscode.ExtensionContext) {}
 
@@ -93,7 +103,9 @@ class MelosScriptTaskProvider implements vscode.TaskProvider {
     })
   }
 
-  public resolveTask(_task: vscode.Task): vscode.Task | undefined {
+  public async resolveTask(
+    _task: vscode.Task
+  ): Promise<vscode.Task | undefined> {
     const definition = _task.definition
     if (!isMelosScriptTaskDefinition(definition)) {
       return undefined
@@ -106,7 +118,49 @@ class MelosScriptTaskProvider implements vscode.TaskProvider {
       return undefined
     }
 
-    return buildMelosScriptTask(definition, scope)
+    const execDefinition = await this.tryResolveExecDefinition(definition)
+    if (isMelosExecScriptTaskDefinition(execDefinition)) {
+      return buildMelosExecScriptTask(execDefinition, scope)
+    } else {
+      return buildMelosScriptTask(definition, scope)
+    }
+  }
+
+  // Checks whether given definition is an exec script definition and tries to
+  // resolve the information that are missing from the task.
+  private async tryResolveExecDefinition(
+    definition: MelosScriptTaskDefinition
+  ): Promise<MelosScriptTaskDefinition> {
+    const packageScriptRegex = /^(.+) \[(.+)\]$/
+    const regexMatch = definition.script.match(packageScriptRegex)
+    if (!regexMatch || regexMatch.length < 3) {
+      return definition
+    }
+
+    const scriptName = regexMatch[1]
+    const packageName = regexMatch[2]
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
+    if (!scriptName || !packageName || !workspaceFolder) {
+      return definition
+    }
+
+    const melosConfig = await loadMelosWorkspaceConfig(this.context, workspaceFolder)
+    if (!melosConfig) {
+      return definition
+    }
+
+    const script = melosConfig.scripts.find(
+      (script) => script.name.value === scriptName
+    )
+    const command = script?.run?.melosExec?.command
+    if (!command) {
+      return definition
+    }
+
+    definition.command = command
+    definition.execOptions = ['--scope', packageName]
+
+    return definition
   }
 }
 

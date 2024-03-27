@@ -250,6 +250,13 @@
                   "type": "string",
                   "description": "The command to execute."
                 },
+                "steps": {
+                  "type": "array",
+                  "description": "Enables the combination of multiple scripts within a single script definition.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "exec": {
                   "anyOf": [
                     {
